@@ -98,12 +98,14 @@ export default class App extends Component {
     return (
       <div className="App">
         <SearchBar handlerFromParant={this.handleData} />
-        <StockInfo 
-          ticker={this.state.ticker}
-          price={this.state.price}
-          profile={this.state.profile}
-          />
-        <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
+        <div>
+          <StockInfo 
+            ticker={this.state.ticker}
+            price={this.state.price}
+            profile={this.state.profile}
+            />
+          <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
+        </div>
       </div>
     )
   }
