@@ -39,11 +39,15 @@ export default class StockChart extends Component {
                   unit: 'year'
               }
           }]
-      }}
+      },
+      legend: {
+        display: false
+      }
+      // responsive: true
+    }
     
     return (
       <div>
-         <h2>Line Example</h2>
         <Line data={data} options={options} />
       </div>
     )

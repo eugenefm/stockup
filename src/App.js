@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './App.css';
+import './App.scss';
 import SearchBar from './SearchBar.js';
 import axios from 'axios';
 import StockInfo from './StockInfo';
@@ -98,7 +98,7 @@ export default class App extends Component {
     return (
       <div className="App">
         <SearchBar handlerFromParant={this.handleData} />
-        <div>
+        <div className="twoColumn">
           <StockInfo 
             ticker={this.state.ticker}
             price={this.state.price}

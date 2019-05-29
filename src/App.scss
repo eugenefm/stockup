@@ -22,7 +22,8 @@ img {
   list-style: none;
   margin: 10px auto;
   padding: 0;
-  max-width: 300px;
+  width: 100%;
+  max-width: 500px;
 }
 li {
   display: flex;
@@ -32,4 +33,10 @@ li {
 }
 .twoColumn {
   display: flex;
+  align-items: center;
+  
+  & > div {
+    width: 50%;
+    padding: 20px;
+  }
 }
