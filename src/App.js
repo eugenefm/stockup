@@ -1,26 +1,110 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react'
 import './App.css';
+import SearchBar from './SearchBar.js';
+import axios from 'axios';
+import StockInfo from './StockInfo';
+import StockChart from './StockChart';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+export default class App extends Component {
+  constructor() {
+    super()
+    this.state={
+      ticker: 'GOOG',
+      profile: [],
+      price: 0,
+      timeSeries: [],
+      timeData: [],
+      timeLabel: []
+    }
+  }
+  handleData = (data) => {
+    this.setState({
+    ticker: data
+    })
+    this.getProfile(data);
+    this.getTimeSeries(data);
+    this.getPrice(data);
+  }
+  getProfile = (ticker) => {
+    const url = 'https://financialmodelingprep.com/api/v3/company/profile/';
+    //make the api call to the museum
+    axios({
+      method: 'GET',
+      url: url + ticker,
+      dataResponse: 'json'
+    }).then(response =>{
+      response = response.data.profile
+      console.log(response)
+
+      this.setState({
+        profile: response
+      })
+    })
+  }
+  getPrice = (ticker) => {
+    const url = 'https://financialmodelingprep.com/api/company/real-time-price/';
+    //make the api call to the museum
+    axios({
+      method: 'GET',
+      url: url + ticker,
+      dataResponse: 'json',
+      params: {
+        datatype: 'json'
+      }
+    }).then(response =>{
+      response = response.data.price
+      console.log(response)
+
+      this.setState({
+        price: response
+      })
+    })
+  }
+  getTimeSeries = (ticker) => {
+    const url = 'https://financialmodelingprep.com/api/v3/historical-price-full/';
+    //make the api call to the museum
+    axios({
+      method: 'GET',
+      url: url + ticker,
+      dataResponse: 'json'
+    }).then(response =>{
+      response = response.data.historical
+      let timeData = [];
+      let timeLabel = [];
+      response.forEach((item) => {
+        timeData.push(item.close)
+        timeLabel.push(item.date)
+      })
+
+      this.setState({
+        timeSeries: response,
+        timeLabel: timeLabel,
+        timeData: timeData
+      })
+    })
+  }
+  // componentDidUpdate(){
+  //   this.getProfile();
+  //   this.getTimeSeries();
+  // }
+  componentDidMount(){
+    this.getProfile(this.state.ticker);
+    this.getTimeSeries(this.state.ticker);
+    this.getPrice(this.state.ticker);
+  }
+  render() {
+    return (
+      <div className="App">
+        <SearchBar handlerFromParant={this.handleData} />
+        <StockInfo 
+          ticker={this.state.ticker}
+          price={this.state.price}
+          profile={this.state.profile}
+          />
+        <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
+      </div>
+    )
+  }
 }
-
-export default App;
