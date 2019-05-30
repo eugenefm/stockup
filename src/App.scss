@@ -197,6 +197,37 @@ img {
   }
 }
 
+.newsFeed {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px -20px;
+
+  a {
+    text-decoration: none;
+    color: #2c3e50;
+  }
+
+  h2 {
+    width: 100%;
+    text-align: center;
+  }
+
+  .article {
+    flex: 1 1 250px;
+    background: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
+
+    img {
+      margin: -20px -20px 0px;
+      width: calc(100% + 40px);
+    }
+  }
+}
+
 @media only screen and (max-width: 900px) {
   .twoColumn {
     flex-direction: column;

@@ -78,7 +78,7 @@ export default class App extends Component {
     })
   }
   getNews = (name) => {
-    const url = encodeURI('https://newsapi.org/v2/everything?apiKey=6b5dae4615c944b1aabc8497566543fa&sources="financial-post,bloomberg,cnbc,the-wall-street-journal,fortune,business-insider"&q=' + name);
+    const url = encodeURI('https://newsapi.org/v2/everything?apiKey=6b5dae4615c944b1aabc8497566543fa&sources="financial-post,cnbc,the-wall-street-journal,fortune,business-insider"&q=' + name);
     //make the api call to the museum
     axios({
       method: 'GET',

@@ -4,7 +4,7 @@ import Article from './Article'
 export default class NewsFeed extends Component {
   render() {
     return (
-      <div>
+      <div className="newsFeed">
         <h2>Recent News</h2>
         {this.props.newsFeed.map((article, index) =>{
           return (
