@@ -49,12 +49,6 @@ img {
       font-weight: 300;
     }
   }
-  input {
-    border-radius: 20px;
-    padding: 5px 20px;
-    border: none;
-    box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
-  }
 }
 
 .imageBox {
@@ -69,7 +63,8 @@ img {
 
   img {
     max-width: 75px;
-    margin: 20px auto;
+    max-height: 75px;
+    margin: 10px auto;
   }
 }
 
@@ -79,15 +74,15 @@ img {
   padding: 0;
   width: 100%;
   max-width: 500px;
-}
-li {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 
-  &:last-of-type {
-    border-bottom: none;
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    &:last-of-type {
+      border-bottom: none;
+    }
   }
 }
 .twoColumn {
@@ -125,5 +120,75 @@ li {
     width: 65%;
     padding-left: 40px;
     margin-bottom: 20px;
+  }
+}
+
+
+.react-autosuggest {
+  &__container {
+    position: relative;
+  }
+  &__input {
+    width: 280px;
+    height: 50px;
+    padding: 10px 20px;
+    font-weight: 300;
+    border: none;
+    border-radius: 25px;
+  }
+  &__input:focus {
+    outline: none;
+  }
+  &__container--open .react-autosuggest__input {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  &__suggestions-container {
+    display: none;
+  }
+  &__container--open .react-autosuggest__suggestions-container {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    top: 50px;
+    width: 280px;
+    color: #000;
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+
+    .suggestion-content {
+      display: flex;
+      align-items: center;
+      background-repeat: no-repeat;
+    }
+
+    .highlight {
+      color: #000;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+    }    
+
+  }
+  &__suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  &__suggestion {
+    cursor: pointer;
+    padding: 10px 20px;
+  }
+  &__suggestion:not(:first-child) {
+    border-top: 1px solid #ddd;
+  }
+  &__suggestion--highlighted {
+    background-color: #fff;
+    color: #000;
+  }
+  &__suggestion--focused .highlight {
+    color: #120000;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
   }
 }

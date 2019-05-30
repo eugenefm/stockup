@@ -4,6 +4,7 @@ import SearchBar from './SearchBar.js';
 import axios from 'axios';
 import StockInfo from './StockInfo';
 import StockChart from './StockChart';
+import SearchBarAuto from './SearchBarAuto';
 
 
 
@@ -100,7 +101,8 @@ export default class App extends Component {
         <header>
           <div className={'topBar wrapper'}>
             <h1><img src={require('./logo.svg')} alt="Stockup.ninja" /></h1>
-            <SearchBar handlerFromParant={this.handleData} />
+            {/* <SearchBar handlerFromParant={this.handleData} /> */}
+            <SearchBarAuto handlerFromParant={this.handleData} />
           </div>
           <div className={'twoColumn wrapper'}>
             <StockInfo 
