@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import './App.scss';
-import SearchBar from './SearchBar.js';
 import axios from 'axios';
 import StockInfo from './StockInfo';
 import StockChart from './StockChart';
 import SearchBarAuto from './SearchBarAuto';
+import NewsFeed from './NewsFeed';
 
 
 
@@ -134,7 +134,9 @@ export default class App extends Component {
             {/* <SearchBar handlerFromParant={this.handleData} /> */}
             <SearchBarAuto handlerFromParant={this.handleData} />
           </div>
-          <div className={'twoColumn wrapper'}>
+        </header>
+        <main className='wrapper'>
+          <div className='twoColumn'>
             <StockInfo 
               ticker={this.state.ticker}
               price={this.state.price}
@@ -143,7 +145,8 @@ export default class App extends Component {
               />
             <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
           </div>
-        </header>
+          <NewsFeed newsFeed={this.state.news} />
+        </main>
       </div>
     )
   }

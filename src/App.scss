@@ -5,11 +5,12 @@
 body {
   color: #fff;
   font-family: 'Nunito Sans', sans-serif;
+  background: linear-gradient(#1570bf, #183f8c);
+  min-height: 100vh;
 }
 
 header {
-  background: linear-gradient(#1570bf, #183f8c);
-  min-height: 100vh;
+
 }
 .wrapper {
   width:90%;

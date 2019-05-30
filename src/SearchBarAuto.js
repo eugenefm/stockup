@@ -30,7 +30,7 @@ import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
 // https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
 
 
-export default class SearchBarAuto extends React.Component {
+export default class SearchBarAuto extends Component {
   constructor() {
     super();
 
