@@ -17,7 +17,9 @@ export default class App extends Component {
       price: 0,
       timeSeries: [],
       timeData: [],
-      timeLabel: []
+      timeLabel: [],
+      companyName: '',
+      news: [],
     }
   }
   handleData = (data) => {
@@ -38,9 +40,21 @@ export default class App extends Component {
     }).then(response =>{
       response = response.data.profile
       console.log(response)
-
+      
+      let companyName = response.companyName
+      if(companyName.includes(' Inc')){
+        companyName = companyName.substr(0,companyName.indexOf(' Inc'));
+      } else if(companyName.includes(' Ltd')){
+        companyName = companyName.substr(0,companyName.indexOf(' Ltd'));
+      } else if(companyName.includes(' (The)')){
+        companyName = companyName.substr(0,companyName.indexOf(' (The)'));
+      }
+      
       this.setState({
-        profile: response
+        profile: response,
+        companyName: companyName
+      }, () =>{
+        this.getNews(this.state.companyName);
       })
     })
   }
@@ -56,10 +70,26 @@ export default class App extends Component {
       }
     }).then(response =>{
       response = response.data.price
-      console.log(response)
+      // console.log(response)
 
       this.setState({
         price: response
+      })
+    })
+  }
+  getNews = (name) => {
+    const url = encodeURI('https://newsapi.org/v2/everything?apiKey=6b5dae4615c944b1aabc8497566543fa&sources="financial-post,bloomberg,cnbc,the-wall-street-journal,fortune,business-insider"&q=' + name);
+    //make the api call to the museum
+    axios({
+      method: 'GET',
+      url: url,
+      dataResponse: 'json',
+    }).then(response =>{
+      response = response.data.articles
+      console.log(response)
+
+      this.setState({
+        news: response
       })
     })
   }
@@ -109,6 +139,7 @@ export default class App extends Component {
               ticker={this.state.ticker}
               price={this.state.price}
               profile={this.state.profile}
+              companyName={this.state.companyName}
               />
             <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
           </div>

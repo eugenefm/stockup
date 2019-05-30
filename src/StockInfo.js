@@ -5,11 +5,11 @@ export default function StockInfo(props) {
     <div className="stockInfo">
       <div className="mainInfo">
         <div className="imageBox">
-          <img srcSet={props.profile.image} alt={props.profile.companyName} />  
+          <img srcSet={props.profile.image} alt={props.companyName} />  
         </div>
         <div>
-          <h2>{props.ticker}</h2>
-          <p>{props.price}</p>
+          <h2>{props.companyName} </h2>
+          <p>({props.ticker}) {props.price}</p>
         </div>
       </div>
       <p>{props.profile.description}</p>

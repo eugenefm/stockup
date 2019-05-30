@@ -51,7 +51,7 @@ export default class SearchBarAuto extends React.Component {
       dataResponse: 'json'
     }).then(response =>{
       response = response.data
-      console.log(response)
+      // console.log(response)
       let validTickers = response.map((ticker) => {
         return ticker.Ticker;
       });
@@ -88,7 +88,7 @@ export default class SearchBarAuto extends React.Component {
   }
   
   renderSuggestion = (suggestion, { query }) => {
-    const suggestionText = `${suggestion.Ticker} ${suggestion.companyName}`;
+    const suggestionText = `${suggestion.Ticker} | ${suggestion.companyName}`;
     const matches = AutosuggestHighlightMatch(suggestionText, query);
     const parts = AutosuggestHighlightParse(suggestionText, matches);
   
@@ -135,9 +135,6 @@ export default class SearchBarAuto extends React.Component {
     })
     this.props.handlerFromParant(ticker);
     
-    //Here you do whatever you want with the values
-    console.log(suggestionValue)
-    console.log(this.state.value); //For example alert the selected value
   };
   onSubmit = (e) => {
     e.preventDefault();
