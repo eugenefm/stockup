@@ -1,21 +1,76 @@
-.App {
-  text-align: center;
-  padding: 20px
+@import 'styles/setup';
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300|Nunito:600&display=swap');
+
+
+body {
+  color: #fff;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+header {
+  background: linear-gradient(#1570bf, #183f8c);
+  min-height: 100vh;
+}
+.wrapper {
+  width:90%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+}
+
+h2 {
+  margin: 0;
+}
+
+p {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 300;
 }
 
 img {
-  max-width: 75px;
-  margin: 20px auto;
+  width: 100%;
 }
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+
+  h1 {
+    span {
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 300;
+    }
+  }
+  input {
+    border-radius: 20px;
+    padding: 5px 20px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
+  }
+}
+
 .imageBox {
   display: flex;
   align-items: center;
   width: 100px;
   height: 100px;
+  margin-right: 20px;
   box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
   border-radius: 5px;
-  margin: 20px auto;
+  background: #fff;
 
+  img {
+    max-width: 75px;
+    margin: 20px auto;
+  }
 }
 
 .infoList {
@@ -28,15 +83,47 @@ img {
 li {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid #555555;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+
+  &:last-of-type {
+    border-bottom: none;
+  }
 }
 .twoColumn {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   
-  & > div {
-    width: 50%;
-    padding: 20px;
+  .stockInfo {
+    width: 35%;
+
+    .mainInfo {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    p {
+      font-size: .8rem;
+    }
+    
+    li {
+      font-size: .8rem;
+
+      span {
+        &:first-of-type {
+          font-weight: 600;
+          font-family: 'Nunito', sans-serif;
+        }
+
+        &:last-of-type {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+  .stockChart {
+    width: 65%;
+    padding-left: 40px;
+    margin-bottom: 20px;
   }
 }

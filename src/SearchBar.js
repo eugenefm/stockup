@@ -10,7 +10,7 @@ export default class SearchBar extends Component {
 
   handleChange = (e) => {
       this.setState({
-          search: e.target.value
+          search: (e.target.value).toUpperCase()
       })
   }
 
@@ -22,15 +22,16 @@ export default class SearchBar extends Component {
   render() {
       return (
           <div>
-          <form>
+          <form onSubmit={(e) => this.onSubmit(e)}>
               <label>
-                  Ticker:
                   <input
                       name='search'
                       value={this.state.search}
-                      onChange={e => this.handleChange(e)}/>
+                      onChange={e => this.handleChange(e)}
+                      placeholder='GOOG'
+                      autoComplete='off'/>
               </label>
-              <button onClick={(e) => this.onSubmit(e)}>Search</button>         
+              {/* <button onClick={(e) => this.onSubmit(e)}>Search</button>          */}
           </form>
           </div>
       );

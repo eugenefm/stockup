@@ -2,12 +2,16 @@ import React from 'react'
 
 export default function StockInfo(props) {
   return (
-    <div>
-      <div className="imageBox">
-        <img srcSet={props.profile.image} alt={props.profile.companyName} />  
+    <div className="stockInfo">
+      <div className="mainInfo">
+        <div className="imageBox">
+          <img srcSet={props.profile.image} alt={props.profile.companyName} />  
+        </div>
+        <div>
+          <h2>{props.ticker}</h2>
+          <p>{props.price}</p>
+        </div>
       </div>
-      <h2>{props.ticker}</h2>
-      <p>{props.price}</p>
       <p>{props.profile.description}</p>
       <ul className="infoList">
         <li>

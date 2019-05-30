@@ -97,15 +97,20 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <SearchBar handlerFromParant={this.handleData} />
-        <div className="twoColumn">
-          <StockInfo 
-            ticker={this.state.ticker}
-            price={this.state.price}
-            profile={this.state.profile}
-            />
-          <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
-        </div>
+        <header>
+          <div className={'topBar wrapper'}>
+            <h1><img src={require('./logo.svg')} alt="Stockup.ninja" /></h1>
+            <SearchBar handlerFromParant={this.handleData} />
+          </div>
+          <div className={'twoColumn wrapper'}>
+            <StockInfo 
+              ticker={this.state.ticker}
+              price={this.state.price}
+              profile={this.state.profile}
+              />
+            <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
+          </div>
+        </header>
       </div>
     )
   }
