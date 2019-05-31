@@ -40,7 +40,7 @@ export default class App extends Component {
       dataResponse: 'json'
     }).then(response =>{
       response = response.data.profile
-      console.log(response)
+      // console.log(response)
       
       let companyName = response.companyName
       if(companyName.includes(' Inc')){
@@ -71,8 +71,9 @@ export default class App extends Component {
       }
     }).then(response =>{
       this.getTimeSeries(response.data.symbol);
+      console.log(response)
       response = response.data.price
-      // console.log(response)
+      
 
       this.setState({
         price: response
@@ -138,10 +139,7 @@ export default class App extends Component {
       }
     });   
   }
-  // componentDidUpdate(){
-  //   this.getProfile();
-  //   this.getTimeSeries();
-  // }
+
   componentDidMount(){
     this.getProfile(this.state.ticker);
     
@@ -159,6 +157,7 @@ export default class App extends Component {
           <div className={'twoColumn wrapper'}>
             <StockInfo 
               ticker={this.state.ticker}
+              change={this.state.calcData.change}
               price={this.state.price}
               profile={this.state.profile}
               companyName={this.state.companyName}

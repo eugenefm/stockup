@@ -1,6 +1,14 @@
 import React from 'react'
 
 export default function StockInfo(props) {
+  
+  const change = () => {
+    if (props.change < 0) {
+      return <span className="negative"> {props.change} </span>;
+    } else {
+      return <span className="positive"> {props.change} </span>;
+    }
+  }
   return (
     <div className="stockInfo">
       <div className="mainInfo">
@@ -9,7 +17,7 @@ export default function StockInfo(props) {
         </div>
         <div>
           <h2>{props.companyName} </h2>
-          <p>({props.ticker}) {props.price}</p>
+          <p>({props.ticker}) {props.price} {change()}</p>
         </div>
       </div>
       <div className="descriptionAndList">
