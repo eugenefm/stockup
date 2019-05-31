@@ -1,21 +1,32 @@
 @import 'styles/setup';
 @import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300|Nunito:600&display=swap');
 
+// * {
+//   border: solid 1px red;
+// }
 
 body {
   color: #fff;
   font-family: 'Nunito Sans', sans-serif;
-  background: linear-gradient(#1570bf, #183f8c);
-  min-height: 100vh;
+
 }
 
 header {
-
+  background: linear-gradient(#1570bf, #183f8c);
+  padding-bottom: 50px;
 }
 .wrapper {
   width:90%;
   max-width: 1600px;
   margin: 0 auto;
+}
+main {
+  padding: 50px 0;
+}
+footer {
+  background: #2c3e50;
+  padding: 20px 0;
+  text-align: center;
 }
 
 h1,
@@ -46,6 +57,7 @@ img {
 
   h1 {
     width: 250px;
+    margin-right: 20px;
 
     img {
       width: 100%;
@@ -56,6 +68,7 @@ img {
 .imageBox {
   display: flex;
   align-items: center;
+  flex: 0 0 100px;
   width: 100px;
   height: 100px;
   margin-right: 20px;
@@ -200,7 +213,14 @@ img {
 .newsFeed {
   display: flex;
   flex-wrap: wrap;
-  margin: 20px -20px;
+  margin: 20px -10px;
+  align-items: flex-start;
+  color: #2c3e50;
+
+  & > p {
+    text-align: center;
+    width: 100%;
+  }
 
   a {
     text-decoration: none;
@@ -210,20 +230,33 @@ img {
   h2 {
     width: 100%;
     text-align: center;
+    color: #2c3e50;
   }
 
   .article {
     flex: 1 1 250px;
     background: #fff;
     padding: 20px;
-    margin: 20px;
+    margin: 10px;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
 
-    img {
+    .previewImage {
       margin: -20px -20px 0px;
       width: calc(100% + 40px);
+      height: 0;
+      overflow: hidden;
+      padding-top: 75%;
+      position: relative
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
   }
 }
@@ -235,7 +268,7 @@ img {
 
     .stockInfo {
       width: 100%;
-      max-width: 500px;
+      max-width: 100%;
 
       .mainInfo {
         justify-content: center;
@@ -246,9 +279,35 @@ img {
       padding: 0;
     }
   }
+  .descriptionAndList {
+    display: flex;
+
+    & > * {
+      width: 50%;
+      padding: 20px;
+    }
+  }
+
 }
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
   .topBar {
     flex-direction: column;
+  }
+  .descriptionAndList {
+    flex-direction: column;
+
+    & > * {
+      width: 100%;
+      padding: 0px;
+    }
+  }
+  .mainInfo {
+    flex-direction: column;
+    .imageBox {
+      margin: 10px auto;
+    }
+    div {
+      text-align: center;
+    }
   }
 }

@@ -12,33 +12,35 @@ export default function StockInfo(props) {
           <p>({props.ticker}) {props.price}</p>
         </div>
       </div>
-      <p>{props.profile.description}</p>
-      <ul className="infoList">
-        <li>
-          <span>52 Week Range</span>
-          <span>{props.profile.range}</span>
-        </li>
-        <li>
-          <span>Beta</span>
-          <span>{props.profile.beta}</span>
-        </li>
-        <li>
-          <span>Market Cap</span>
-          <span>{props.profile.mktCap}</span>
-        </li>
-        <li>
-          <span>Exchange</span>
-          <span>{props.profile.exchange}</span>
-        </li>
-        <li>
-          <span>Sector</span>
-          <span>{props.profile.sector}</span>
-        </li>
-        <li>
-          <span>Industry</span>
-          <span>{props.profile.industry}</span>
-        </li>
-      </ul>
+      <div className="descriptionAndList">
+        <p className="stockDescription">{props.profile.description}</p>
+        <ul className="infoList">
+          <li>
+            <span>52 Week Range</span>
+            <span>{props.profile.range}</span>
+          </li>
+          <li>
+            <span>Beta</span>
+            <span>{props.profile.beta}</span>
+          </li>
+          <li>
+            <span>Market Cap</span>
+            <span>{props.profile.mktCap}</span>
+          </li>
+          <li>
+            <span>Exchange</span>
+            <span>{props.profile.exchange}</span>
+          </li>
+          <li>
+            <span>Sector</span>
+            <span>{props.profile.sector}</span>
+          </li>
+          <li>
+            <span>Industry</span>
+            <span>{props.profile.industry}</span>
+          </li>
+        </ul>
+      </div>
     </div>
   )
 }

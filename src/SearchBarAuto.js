@@ -134,7 +134,6 @@ export default class SearchBarAuto extends Component {
       value: ticker,
     })
     this.props.handlerFromParant(ticker);
-    
   };
   onSubmit = (e) => {
     e.preventDefault();
@@ -161,7 +160,8 @@ export default class SearchBarAuto extends Component {
           getSuggestionValue={this.getSuggestionValue}
           renderSuggestion={this.renderSuggestion}
           onSuggestionSelected={this.onSuggestionSelected}
-          inputProps={inputProps} />
+          inputProps={inputProps}
+          focusInputOnSuggestionClick={false} />
       </form>
     );
   }

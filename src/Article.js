@@ -4,7 +4,11 @@ export default class Article extends Component {
   
   loadImages = () => {
     if (this.props.urlToImage) {
-      return <img src={this.props.urlToImage} alt={this.props.title}></img>;
+      return (
+        <div className="previewImage">
+          <img src={this.props.urlToImage} alt={this.props.title} />
+        </div>
+      );
     }}
   render() {
     return (

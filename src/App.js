@@ -5,7 +5,8 @@ import StockInfo from './StockInfo';
 import StockChart from './StockChart';
 import SearchBarAuto from './SearchBarAuto';
 import NewsFeed from './NewsFeed';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 
 export default class App extends Component {
@@ -20,6 +21,7 @@ export default class App extends Component {
       timeLabel: [],
       companyName: '',
       news: [],
+      calcData: {}
     }
   }
   handleData = (data) => {
@@ -27,7 +29,6 @@ export default class App extends Component {
     ticker: data
     })
     this.getProfile(data);
-    this.getTimeSeries(data);
     this.getPrice(data);
   }
   getProfile = (ticker) => {
@@ -69,6 +70,7 @@ export default class App extends Component {
         datatype: 'json'
       }
     }).then(response =>{
+      this.getTimeSeries(response.data.symbol);
       response = response.data.price
       // console.log(response)
 
@@ -78,12 +80,20 @@ export default class App extends Component {
     })
   }
   getNews = (name) => {
-    const url = encodeURI('https://newsapi.org/v2/everything?apiKey=6b5dae4615c944b1aabc8497566543fa&sources="financial-post,cnbc,the-wall-street-journal,fortune,business-insider"&q=' + name);
+    // const url = encodeURI('https://newsapi.org/v2/everything?apiKey=6b5dae4615c944b1aabc8497566543fa&sources="financial-post,cnbc,the-wall-street-journal,fortune,business-insider"&language=en&q=' + name);
+    const url = 'https://newsapi.org/v2/everything';
     //make the api call to the museum
     axios({
       method: 'GET',
       url: url,
       dataResponse: 'json',
+      params: {
+        apiKey: '6b5dae4615c944b1aabc8497566543fa',
+        sources: '"financial-post,cnbc,the-wall-street-journal,fortune,business-insider"',
+        language: 'en',
+        pageSize: 12,
+        q: encodeURI(name)
+      }
     }).then(response =>{
       response = response.data.articles
       console.log(response)
@@ -108,6 +118,7 @@ export default class App extends Component {
         timeData.push(item.close)
         timeLabel.push(item.date)
       })
+      this.calculateData(timeLabel, response)
 
       this.setState({
         timeSeries: response,
@@ -116,13 +127,24 @@ export default class App extends Component {
       })
     })
   }
+
+  calculateData = (label, data) => {
+    let lastIndex = label.length;
+    let previousClose = data[(lastIndex - 2)].close;
+    let change = (this.state.price - previousClose).toFixed(2);
+    this.setState({
+      calcData: {
+        change: change
+      }
+    });   
+  }
   // componentDidUpdate(){
   //   this.getProfile();
   //   this.getTimeSeries();
   // }
   componentDidMount(){
     this.getProfile(this.state.ticker);
-    this.getTimeSeries(this.state.ticker);
+    
     this.getPrice(this.state.ticker);
   }
   render() {
@@ -134,9 +156,7 @@ export default class App extends Component {
             {/* <SearchBar handlerFromParant={this.handleData} /> */}
             <SearchBarAuto handlerFromParant={this.handleData} />
           </div>
-        </header>
-        <main className='wrapper'>
-          <div className='twoColumn'>
+          <div className={'twoColumn wrapper'}>
             <StockInfo 
               ticker={this.state.ticker}
               price={this.state.price}
@@ -145,8 +165,11 @@ export default class App extends Component {
               />
             <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
           </div>
+        </header>
+        <main className='wrapper'>
           <NewsFeed newsFeed={this.state.news} />
         </main>
+        <footer><p className='wrapper'>Built with <FontAwesomeIcon icon={ faHeart }/> by Eugene Michasiw</p></footer>
       </div>
     )
   }

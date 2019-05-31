@@ -3,6 +3,10 @@ import Article from './Article'
 
 export default class NewsFeed extends Component {
   render() {
+    let error = '';
+    if (!this.props.newsFeed.length) {
+      error = <p>No articles available at this time.</p>
+    }
     return (
       <div className="newsFeed">
         <h2>Recent News</h2>
@@ -15,7 +19,9 @@ export default class NewsFeed extends Component {
               urlToImage={article.urlToImage}
               source={article.source.name}
               description={article.description} />
+              
         )})}
+        {error}
       </div>
     )
   }
