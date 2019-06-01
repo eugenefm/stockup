@@ -88,7 +88,6 @@ img {
   margin: 10px auto;
   padding: 0;
   width: 100%;
-  max-width: 500px;
 
   li {
     display: flex;
@@ -102,7 +101,7 @@ img {
 }
 .twoColumn {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   
   .stockInfo {
     width: 35%;
@@ -110,6 +109,25 @@ img {
     .mainInfo {
       display: flex;
       justify-content: flex-start;
+      .change {
+        border-left: 1px solid rgba(255, 255, 255, 0.5);
+        padding-left: 10px;
+        margin-left: 10px;
+        font-weight: 600;
+        font-family: 'Nunito', sans-serif;
+      }
+
+      .positive {
+        color: #2ecc71;
+      }
+      .negative {
+        color: #e74c3c;
+      }
+    }
+    h2 span {
+      font-size: 1rem;
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 300;
     }
 
     p {
@@ -127,6 +145,7 @@ img {
 
         &:last-of-type {
           opacity: 0.8;
+          text-align: right;
         }
       }
     }
@@ -135,6 +154,27 @@ img {
     width: 65%;
     padding-left: 40px;
     margin-bottom: 20px;
+
+    h3 {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+
+    p {
+      font-size: .8rem;
+      margin: 5px 0;
+    }
+
+    button {
+      background: none;
+      border: none;
+      font-size: .8rem;
+      color: rgba(255, 255, 255, 0.6);
+
+      &:hover {
+        color: rgba(255, 255, 255, 1)
+      }
+    }
   }
 }
 
@@ -236,11 +276,17 @@ img {
   .article {
     flex: 1 1 250px;
     background: #fff;
+    font-size: .8rem;
     padding: 20px;
     margin: 10px;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
+
+    h3 {
+      font-size: 1rem;
+      margin: 0;
+    }
 
     .previewImage {
       margin: -20px -20px 0px;
@@ -250,6 +296,21 @@ img {
       padding-top: 75%;
       position: relative
     }
+    .articleSource {
+      text-transform: uppercase;
+      font-size: .6rem;
+      margin-bottom: 2px;
+    }
+    .articleDate {
+      color: #7f8c8d;
+    }
+    .readMore {
+      color: #1570bf;
+
+      &:hover {
+        color: #183f8c;
+      }
+    }
 
     img {
       position: absolute;
@@ -257,11 +318,12 @@ img {
       left: 0;
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
   }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 960px) {
   .twoColumn {
     flex-direction: column;
     align-items: center;

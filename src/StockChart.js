@@ -37,14 +37,14 @@ export default class StockChart extends Component {
           xAxes: [{
               type: 'time',
               time: {
-                  unit: 'year'
+                  unit: this.props.unit
               },
               gridLines: {
                 color: "rgba(255, 255, 255, 0.2)",
                 zeroLineColor:"rgba(255, 255, 255, 0.2)"
               },
               ticks: {
-                fontColor: "rgba(255, 255, 255, 0.2)",
+                fontColor: "rgba(255, 255, 255, 0.8)",
               }
           }],
           yAxes: [{
@@ -53,7 +53,7 @@ export default class StockChart extends Component {
               zeroLineColor:"rgba(255, 255, 255, 0.2)"
             },
             ticks: {
-              fontColor: "rgba(255, 255, 255, 0.2)",
+              fontColor: "rgba(255, 255, 255, 0.8)",
             }
           }]
       },
@@ -65,6 +65,10 @@ export default class StockChart extends Component {
     
     return (
       <div className="stockChart">
+        <h3>Historical Performance</h3>
+        <p>Scale: <button onClick={() => {this.props.handlerFromParent(22)}}>Month</button>
+        <button onClick={() => {this.props.handlerFromParent(253)}}>Year</button>
+        <button onClick={() => {this.props.handlerFromParent(this.props.max)}}>Five Year</button></p>
         <Line data={data} options={options} />
       </div>
     )

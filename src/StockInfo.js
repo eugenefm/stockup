@@ -1,12 +1,16 @@
-import React from 'react'
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 export default function StockInfo(props) {
   
   const change = () => {
     if (props.change < 0) {
-      return <span className="negative"> {props.change} </span>;
+      return <span className="change negative">{props.change} <FontAwesomeIcon icon={ faChevronDown }/></span>;
+    } else if (props.change > 0) {
+      return <span className="change positive">{props.change} <FontAwesomeIcon icon={ faChevronUp }/></span>;
     } else {
-      return <span className="positive"> {props.change} </span>;
+      return <span className="change">{props.change}</span>;
     }
   }
   return (
@@ -16,8 +20,8 @@ export default function StockInfo(props) {
           <img srcSet={props.profile.image} alt={props.companyName} />  
         </div>
         <div>
-          <h2>{props.companyName} </h2>
-          <p>({props.ticker}) {props.price} {change()}</p>
+          <h2>{props.companyName} <span>({props.ticker})</span></h2>
+          <p>Price: {props.price}{change()}</p>
         </div>
       </div>
       <div className="descriptionAndList">

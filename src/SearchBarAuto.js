@@ -133,12 +133,12 @@ export default class SearchBarAuto extends Component {
     this.setState({
       value: ticker,
     })
-    this.props.handlerFromParant(ticker);
+    this.props.handlerFromParent(ticker);
   };
   onSubmit = (e) => {
     e.preventDefault();
     if(this.state.validTickers.includes(this.state.value)) {
-      this.props.handlerFromParant(this.state.value);
+      this.props.handlerFromParent(this.state.value);
     }
     
   }

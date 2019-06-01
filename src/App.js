@@ -19,6 +19,10 @@ export default class App extends Component {
       timeSeries: [],
       timeData: [],
       timeLabel: [],
+      selectedTimeData: [],
+      selectedTimeLabel: [],
+      selectedTimeUnit: '',
+      maxTimeLength: 0,
       companyName: '',
       news: [],
       calcData: {}
@@ -93,6 +97,7 @@ export default class App extends Component {
         sources: '"financial-post,cnbc,the-wall-street-journal,fortune,business-insider"',
         language: 'en',
         pageSize: 12,
+        sortBy: 'publishedAt',
         q: encodeURI(name)
       }
     }).then(response =>{
@@ -120,6 +125,7 @@ export default class App extends Component {
         timeLabel.push(item.date)
       })
       this.calculateData(timeLabel, response)
+      this.setChartLength(timeLabel, timeData, timeLabel.length)
 
       this.setState({
         timeSeries: response,
@@ -127,6 +133,27 @@ export default class App extends Component {
         timeData: timeData
       })
     })
+  }
+
+  setChartLength = (label, data, time) => {
+    const newLabel = label.slice((label.length - time));
+    const newData = data.slice((data.length - time));
+    let chartUnit = 'year';
+    if (time === 22) {
+      chartUnit = 'day'
+    } else if (time === 253) {
+      chartUnit = 'month'
+    }
+
+    this.setState({
+      selectedTimeData: newData,
+      selectedTimeLabel: newLabel,
+      selectedTimeUnit: chartUnit,
+      maxTimeLength: label.length
+    })
+  }
+  handleTimeSelection = (timeSelection) => {
+    this.setChartLength(this.state.timeLabel, this.state.timeData, timeSelection)
   }
 
   calculateData = (label, data) => {
@@ -142,7 +169,6 @@ export default class App extends Component {
 
   componentDidMount(){
     this.getProfile(this.state.ticker);
-    
     this.getPrice(this.state.ticker);
   }
   render() {
@@ -151,8 +177,7 @@ export default class App extends Component {
         <header>
           <div className={'topBar wrapper'}>
             <h1><img src={require('./logo.svg')} alt="Stockup.ninja" /></h1>
-            {/* <SearchBar handlerFromParant={this.handleData} /> */}
-            <SearchBarAuto handlerFromParant={this.handleData} />
+            <SearchBarAuto handlerFromParent={this.handleData} />
           </div>
           <div className={'twoColumn wrapper'}>
             <StockInfo 
@@ -162,7 +187,7 @@ export default class App extends Component {
               profile={this.state.profile}
               companyName={this.state.companyName}
               />
-            <StockChart labels={this.state.timeLabel} data={this.state.timeData} />
+            <StockChart labels={this.state.selectedTimeLabel} data={this.state.selectedTimeData} handlerFromParent={this.handleTimeSelection} unit={this.state.selectedTimeUnit} max={this.state.maxTimeLength}/>
           </div>
         </header>
         <main className='wrapper'>
