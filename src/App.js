@@ -36,7 +36,7 @@ export default class App extends Component {
     ticker: data
     })
     this.getProfile(data);
-    this.getPrice(data);
+    this.getPriceAndSeries(data);
   }
   getProfile = (ticker) => {
     const url = 'https://financialmodelingprep.com/api/v3/company/profile/';
@@ -64,44 +64,60 @@ export default class App extends Component {
         mktCap = (Math.round((mktCap / 1000000000) * 100) / 100) + ' B'
       }
       
+      this.getNews(companyName);
       // save profile to state
       this.setState({
         profile: response,
         companyName: companyName,
         mktCap: mktCap
-      }, () =>{
-        // call news api with company name
-        this.getNews(this.state.companyName);
       })
     })
   }
-  getPrice = (ticker) => {
+  getPriceAndSeries = (ticker) => {
     const url = 'https://financialmodelingprep.com/api/company/real-time-price/';
+    const url2 = 'https://financialmodelingprep.com/api/v3/historical-price-full/';
+
     // make the api call to get the price
-    axios({
-      method: 'GET',
-      url: url + ticker,
+    const promise1 = axios.get(url + ticker, {
       dataResponse: 'json',
       params: {
         datatype: 'json'
       }
-    }).then(response =>{
+    })
+
+    const promise2 = axios.get(url2 + ticker, {
+      dataResponse: 'json'
+    })
+
+    Promise.all([promise1, promise2]).then(response =>{
       // make the api call to get the timeseries
-      this.getTimeSeries(response.data.symbol);
-      response = response.data.price
+      let response1 = response[0].data.price
+      let response2 = response[1].data.historical
+      let timeData = [];
+      let timeLabel = [];
+      response2.forEach((item) => {
+        timeData.push(item.close)
+        timeLabel.push(item.date)
+      })
+
+      // calculate additional data with the time series
+      this.calculateData(timeData, response2, response1)
+      this.setChartLength(timeLabel, timeData, timeLabel.length)
+
       
       // save the price in to state
       this.setState({
-        price: response
+        price: response1,
+        timeSeries: response,
+        timeLabel: timeLabel,
+        timeData: timeData
       })
     })
   }
   getNews = (name) => {
     const url = 'https://newsapi.org/v2/everything';
     //make the api call
-    axios({
-      method: 'GET',
-      url: url,
+    axios.get(url, {
       dataResponse: 'json',
       params: {
         apiKey: '6b5dae4615c944b1aabc8497566543fa',
@@ -116,33 +132,6 @@ export default class App extends Component {
       // save the news to state
       this.setState({
         news: response
-      })
-    })
-  }
-  getTimeSeries = (ticker) => {
-    const url = 'https://financialmodelingprep.com/api/v3/historical-price-full/';
-    //make the api call
-    axios({
-      method: 'GET',
-      url: url + ticker,
-      dataResponse: 'json'
-    }).then(response =>{
-      response = response.data.historical
-      let timeData = [];
-      let timeLabel = [];
-      response.forEach((item) => {
-        timeData.push(item.close)
-        timeLabel.push(item.date)
-      })
-
-      // calculate additional data with the time series
-      this.calculateData(timeData, response)
-      this.setChartLength(timeLabel, timeData, timeLabel.length)
-
-      this.setState({
-        timeSeries: response,
-        timeLabel: timeLabel,
-        timeData: timeData,
       })
     })
   }
@@ -168,12 +157,12 @@ export default class App extends Component {
     this.setChartLength(this.state.timeLabel, this.state.timeData, timeSelection)
   }
 
-  calculateData = (data, series) => {
+  calculateData = (data, series, price) => {
 
     // change provided by the api is wrong so calculate our own with last closing price and current price
     let lastIndex = data.length;
     let previousClose = series[(lastIndex - 2)].close;
-    let change = (this.state.price - previousClose).toFixed(2);
+    let change = (price - previousClose).toFixed(2);
 
 
     // range provided by the api is out of date so calculate our own
@@ -191,7 +180,7 @@ export default class App extends Component {
 
   componentDidMount(){
     this.getProfile(this.state.ticker);
-    this.getPrice(this.state.ticker);
+    this.getPriceAndSeries(this.state.ticker);
   }
   render() {
     return (

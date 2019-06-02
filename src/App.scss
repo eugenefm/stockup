@@ -380,7 +380,7 @@ img {
   }
 
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 630px) {
   .topBar {
     flex-direction: column;
   }
@@ -400,5 +400,8 @@ img {
     div {
       text-align: center;
     }
+  }
+  footer .footerContent {
+    flex-direction: column;
   }
 }
