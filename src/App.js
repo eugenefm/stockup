@@ -25,7 +25,6 @@ export default class App extends Component {
       maxTimeLength: 0,
       companyName: '',
       mktCap: '',
-      range: '',
       news: [],
       calcData: {}
     }
@@ -188,7 +187,7 @@ export default class App extends Component {
     this.getProfile(this.state.ticker);
     this.getPriceAndSeries(this.state.ticker);
   }
-  
+
   render() {
     return (
       <div className="App">
@@ -216,7 +215,7 @@ export default class App extends Component {
         <footer>
           <div className='wrapper footerContent'>
             <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com">Eugene Michasiw</a>.</p>
-            <p>Financial data provided <a href="https://financialmodelingprep.com/">Financial Modeling Prep</a>. News provided by <a href="https://newsapi.org/">News API</a>.</p>
+            <p>Financial data provided by <a href="https://financialmodelingprep.com/">Financial Modeling Prep</a>. News provided by <a href="https://newsapi.org/">NewsAPI.org</a>.</p>
           </div>
         </footer>
           

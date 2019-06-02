@@ -20,15 +20,15 @@ export default class Article extends Component {
   render() {
     return (
       <div className="article">
-        <a href={this.props.url}>
+        <a href={this.props.url} target="_blank">
           {this.loadImages()}
         </a>
         <p className="articleSource">{this.props.source} <span className="articleDate">{this.props.date}</span> </p>
-        <a href={this.props.url}>
+        <a href={this.props.url} target="_blank">
           <h3>{this.props.title}</h3>
         </a> 
         <p>{this.props.description}</p>
-        <a className="readMore"href={this.props.url}>Read More</a> 
+        <a className="readMore" href={this.props.url} target="_blank">Read More</a> 
       </div>
     )
   }

@@ -125,8 +125,13 @@ img {
     .mainInfo {
       display: flex;
       justify-content: flex-start;
+      .price {
+        font-family: 'Nunito', sans-serif;
+        font-weight:600;
+      }
       .change {
         padding: 2px 10px;
+        display: inline-block;
         border-radius: 14px;
         color: #fff;
         background: #2c3e50;
