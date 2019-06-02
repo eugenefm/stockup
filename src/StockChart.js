@@ -68,9 +68,9 @@ export default class StockChart extends Component {
     return (
       <div className="stockChart">
         <h3>Historical Performance</h3>
-        <p>Scale: <button onClick={() => {this.props.handlerFromParent(22)}}>Month</button>
-        <button onClick={() => {this.props.handlerFromParent(253)}}>Year</button>
-        <button onClick={() => {this.props.handlerFromParent(this.props.max)}}>Five Year</button></p>
+        <p>Scale: <button onClick={() => {this.props.handlerFromParent(22)}} className={this.props.unit === 'day' ? 'active' : null}>Month</button>
+        <button onClick={() => {this.props.handlerFromParent(253)}} className={this.props.unit === 'month' ? 'active' : null}>Year</button>
+        <button onClick={() => {this.props.handlerFromParent(this.props.max)}} className={this.props.unit === 'year' ? 'active' : null}>Five Year</button></p>
         <Line data={data} options={options} />
       </div>
     )
