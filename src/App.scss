@@ -27,6 +27,22 @@ footer {
   background: #2c3e50;
   padding: 20px 0;
   text-align: center;
+
+  .footerContent{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  
+
+  p {
+    font-size: .8rem;
+    margin: 5px;
+  }
+
+  a {
+    color: #fff;
+  }
 }
 
 h1,
@@ -110,18 +126,21 @@ img {
       display: flex;
       justify-content: flex-start;
       .change {
-        border-left: 1px solid rgba(255, 255, 255, 0.5);
-        padding-left: 10px;
+        padding: 2px 10px;
+        border-radius: 14px;
+        color: #fff;
+        background: #2c3e50;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         margin-left: 10px;
         font-weight: 600;
         font-family: 'Nunito', sans-serif;
       }
 
       .positive {
-        color: #2ecc71;
+        background: #27ae60;
       }
       .negative {
-        color: #e74c3c;
+        background: #c0392b;
       }
     }
     h2 span {
@@ -171,14 +190,14 @@ img {
       font-size: .8rem;
       color: rgba(255, 255, 255, 0.6);
 
-      &:hover {
+      &:hover, &:focus {
         color: rgba(255, 255, 255, 1)
       }
     }
   }
 }
 
-
+/* react-autosuggest components have their own default class names and need to be targeted as such, so these classes will be formatted differently from the rest of the content*/
 .react-autosuggest {
   &__container {
     position: relative;
@@ -307,7 +326,7 @@ img {
     .readMore {
       color: #1570bf;
 
-      &:hover {
+      &:hover, &:focus {
         color: #183f8c;
       }
     }
@@ -319,6 +338,16 @@ img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: all 1000ms;
+      filter: grayscale(1);
+
+      &:hover, &:focus {
+        width: 110%;
+        height: 110%;
+        top: -5%;
+        left: -5%;
+        filter: grayscale(0);
+      }
     }
   }
 }

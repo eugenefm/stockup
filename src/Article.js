@@ -23,11 +23,11 @@ export default class Article extends Component {
         <a href={this.props.url}>
           {this.loadImages()}
         </a>
-        <p className="articleSource">{this.props.source}</p>
+        <p className="articleSource">{this.props.source} <span className="articleDate">{this.props.date}</span> </p>
         <a href={this.props.url}>
           <h3>{this.props.title}</h3>
         </a> 
-        <p><span className="articleDate">{this.props.date}</span> {this.props.description}</p>
+        <p>{this.props.description}</p>
         <a className="readMore"href={this.props.url}>Read More</a> 
       </div>
     )

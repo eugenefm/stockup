@@ -20,7 +20,7 @@ export default class NewsFeed extends Component {
               title={article.title}
               url={article.url}
               urlToImage={article.urlToImage}
-              date={moment(article.publishedAt).format("MMM D, YYYY |")}
+              date={moment(article.publishedAt).format("| MMM D, YYYY")}
               source={article.source.name}
               description={article.description} />
               

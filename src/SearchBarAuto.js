@@ -4,32 +4,6 @@ import axios from 'axios';
 import AutosuggestHighlightMatch from 'autosuggest-highlight/match';
 import AutosuggestHighlightParse from 'autosuggest-highlight/parse';
 
-// const people = [
-//   {
-//     first: 'Charlie',
-//     last: 'Brown',
-//     twitter: 'dancounsell'
-//   },
-//   {
-//     first: 'Charlotte',
-//     last: 'White',
-//     twitter: 'mtnmissy'
-//   },
-//   {
-//     first: 'Chloe',
-//     last: 'Jones',
-//     twitter: 'ladylexy'
-//   },
-//   {
-//     first: 'Cooper',
-//     last: 'King',
-//     twitter: 'steveodom'
-//   }
-// ];
-
-// https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions#Using_Special_Characters
-
-
 export default class SearchBarAuto extends Component {
   constructor() {
     super();
@@ -148,11 +122,13 @@ export default class SearchBarAuto extends Component {
     const inputProps = {
       placeholder: "Ticker: GOOG",
       value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      id: "stockSearch"
     };
 
     return (
       <form onSubmit={(e) => this.onSubmit(e)}>
+        <label htmlFor='stockSearch' className="visuallyHidden">Input stock sticker.</label>
         <Autosuggest 
           suggestions={suggestions.slice(0, 5)}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
