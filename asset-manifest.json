@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/eugeneMichasiwProject5/static/css/main.42dfbf84.chunk.css",
-    "main.js": "/eugeneMichasiwProject5/static/js/main.1caf4b3f.chunk.js",
-    "main.js.map": "/eugeneMichasiwProject5/static/js/main.1caf4b3f.chunk.js.map",
+    "main.css": "/eugeneMichasiwProject5/static/css/main.608bff31.chunk.css",
+    "main.js": "/eugeneMichasiwProject5/static/js/main.bc8aeaba.chunk.js",
+    "main.js.map": "/eugeneMichasiwProject5/static/js/main.bc8aeaba.chunk.js.map",
     "runtime~main.js": "/eugeneMichasiwProject5/static/js/runtime~main.1bc03b7e.js",
     "runtime~main.js.map": "/eugeneMichasiwProject5/static/js/runtime~main.1bc03b7e.js.map",
     "static/js/2.484bc7d4.chunk.js": "/eugeneMichasiwProject5/static/js/2.484bc7d4.chunk.js",
     "static/js/2.484bc7d4.chunk.js.map": "/eugeneMichasiwProject5/static/js/2.484bc7d4.chunk.js.map",
     "index.html": "/eugeneMichasiwProject5/index.html",
-    "precache-manifest.4a3f17452c7c1e4ca702176516322452.js": "/eugeneMichasiwProject5/precache-manifest.4a3f17452c7c1e4ca702176516322452.js",
+    "precache-manifest.46b266b28e842907a545ce08f2b2169d.js": "/eugeneMichasiwProject5/precache-manifest.46b266b28e842907a545ce08f2b2169d.js",
     "service-worker.js": "/eugeneMichasiwProject5/service-worker.js",
-    "static/css/main.42dfbf84.chunk.css.map": "/eugeneMichasiwProject5/static/css/main.42dfbf84.chunk.css.map",
+    "static/css/main.608bff31.chunk.css.map": "/eugeneMichasiwProject5/static/css/main.608bff31.chunk.css.map",
     "static/media/logo.svg": "/eugeneMichasiwProject5/static/media/logo.78679e07.svg"
   }
 }
