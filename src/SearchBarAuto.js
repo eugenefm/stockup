@@ -18,18 +18,15 @@ export default class SearchBarAuto extends Component {
 
   getTickers = () => {
     const url = 'https://financialmodelingprep.com/api/stock/list/all?datatype=json';
-    //make the api call to the museum
-    axios({
-      method: 'GET',
-      url: url,
+    //make the api call to get every available ticker sumbol
+    axios.get( url, {
       dataResponse: 'json'
     }).then(response =>{
       response = response.data
-      // console.log(response)
       let validTickers = response.map((ticker) => {
         return ticker.Ticker;
       });
-
+      // save full response and array of valid tickers to the component's state
       this.setState({
         tickers: response,
         validTickers: validTickers
@@ -38,13 +35,18 @@ export default class SearchBarAuto extends Component {
   }
 
   componentDidMount(){
+    // make api call on load
     this.getTickers();
   }
 
+  // react autosuggest code begins, code adapted from their custom render demo: https://codepen.io/moroshko/pen/PZWbzK
+
+  // escape special characters 
   escapeRegexCharacters = (str) => {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
   
+  // get suggestions
   getSuggestions = (value) => {
     const escapedValue = this.escapeRegexCharacters(value.trim());
     
@@ -57,15 +59,18 @@ export default class SearchBarAuto extends Component {
     return this.state.tickers.filter(stock => regex.test(this.getSuggestionValue(stock)));
   }
   
+  // get suggestion value
   getSuggestionValue = (suggestion) => {
     return `${suggestion.Ticker} ${suggestion.companyName}`;
   }
   
+  // render the list of of suggestions
   renderSuggestion = (suggestion, { query }) => {
     const suggestionText = `${suggestion.Ticker} | ${suggestion.companyName}`;
     const matches = AutosuggestHighlightMatch(suggestionText, query);
     const parts = AutosuggestHighlightParse(suggestionText, matches);
   
+    // render the list and apply the class of highlight to the parts that match the input
     return (
       <span className={'suggestion-content '}>
         <span className="suggestion">
@@ -83,24 +88,28 @@ export default class SearchBarAuto extends Component {
     );
   }
 
+  // have react handle the inout change
   onChange = (event, { newValue, method }) => {
     this.setState({
       value: newValue.toUpperCase()
     });
   };
   
+  // store the suggestions to state
   onSuggestionsFetchRequested = ({ value }) => {
     this.setState({
       suggestions: this.getSuggestions(value)
     });
   };
 
+  // clear the state
   onSuggestionsClearRequested = () => {
     this.setState({
       suggestions: []
     });
   };
 
+  // when a suggestion is slected pass the ticker to an event handler from the parent
   onSuggestionSelected = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) =>{
     event.preventDefault();
     const ticker = suggestionValue.substr(0,suggestionValue.indexOf(' '));
@@ -109,6 +118,8 @@ export default class SearchBarAuto extends Component {
     })
     this.props.handlerFromParent(ticker);
   };
+
+  // if the user submits a valid input instead of picking a suggestion from the list, pass the ticker to an event handler from the parent
   onSubmit = (e) => {
     e.preventDefault();
     if(this.state.validTickers.includes(this.state.value)) {
@@ -119,6 +130,8 @@ export default class SearchBarAuto extends Component {
 
   render() {
     const { value, suggestions } = this.state;
+
+    // input props set the parameters on the input
     const inputProps = {
       placeholder: "Ticker: GOOG",
       value,
@@ -143,139 +156,3 @@ export default class SearchBarAuto extends Component {
   }
 }
 
-
-// // const languages = [
-// //   {
-// //     name: 'C',
-// //     year: 1972
-// //   },
-// //   {
-// //     name: 'Elm',
-// //     year: 2012
-// //   }
-// // ];
-
-// // Teach Autosuggest how to calculate suggestions for any given input value.
-// // const getSuggestions = value => {
-// //   const inputValue = value.trim().toLowerCase();
-// //   const inputLength = inputValue.length;
-
-// //   return inputLength === 0 ? [] : languages.filter(lang =>
-// //     lang.name.toLowerCase().slice(0, inputLength) === inputValue
-// //   );
-// // };
-
-// // // When suggestion is clicked, Autosuggest needs to populate the input
-// // // based on the clicked suggestion. Teach Autosuggest how to calculate the
-// // // input value for every given suggestion.
-// // const getSuggestionValue = suggestion => suggestion.name;
-
-// // // Use your imagination to render suggestions.
-// // const renderSuggestion = suggestion => (
-// //   <div>
-// //     {suggestion.name}
-// //   </div>
-// // );
-
-// export default class Example extends Component {
-//   constructor() {
-//     super();
-
-//     // Autosuggest is a controlled component.
-//     // This means that you need to provide an input value
-//     // and an onChange handler that updates this value (see below).
-//     // Suggestions also need to be provided to the Autosuggest,
-//     // and they are initially empty because the Autosuggest is closed.
-//     this.state = {
-//       value: '',
-//       suggestions: [],
-//       tickers: []
-//     };
-//   }
-//   getTickers = () => {
-//     const url = 'https://financialmodelingprep.com/api/stock/list/all?datatype=json';
-//     //make the api call to the museum
-//     axios({
-//       method: 'GET',
-//       url: url,
-//       dataResponse: 'json'
-//     }).then(response =>{
-//       response = response.data
-//       console.log(response)
-
-//       this.setState({
-//         tickers: response
-//       })
-//     })
-//   }
-
-//   getSuggestions = value => {
-//     const inputValue = value.trim().toUpperCase();
-//     const inputLength = inputValue.length;
-//     const tickers = this.state.tickers;
-  
-//     return inputLength === 0 ? [] : tickers.filter(arr =>
-//       arr.Ticker.toUpperCase().slice(0, inputLength) === inputValue
-//     );
-//   };
-  
-//   // When suggestion is clicked, Autosuggest needs to populate the input
-//   // based on the clicked suggestion. Teach Autosuggest how to calculate the
-//   // input value for every given suggestion.
-//   getSuggestionValue = suggestion => suggestion.Ticker;
-  
-//   // Use your imagination to render suggestions.
-//   renderSuggestion = suggestion => (
-//     <div>
-//       {suggestion.Ticker}
-//       {suggestion.companyName}
-//     </div>
-//   );
-
-//   onChange = (event, { newValue }) => {
-//     this.setState({
-//       value: newValue.toUpperCase()
-//     });
-//   };
-
-//   // Autosuggest will call this function every time you need to update suggestions.
-//   // You already implemented this logic above, so just use it.
-//   onSuggestionsFetchRequested = ({ value }) => {
-//     this.setState({
-//       suggestions: this.getSuggestions(value)
-//     });
-//   };
-
-//   // Autosuggest will call this function every time you need to clear suggestions.
-//   onSuggestionsClearRequested = () => {
-//     this.setState({
-//       suggestions: []
-//     });
-//   };
-//   componentDidMount(){
-//     this.getTickers();
-//   }
-
-//   render() {
-//     const { value, suggestions } = this.state;
-
-//     // Autosuggest will pass through all these props to the input.
-//     const inputProps = {
-//       placeholder: 'Type a programming language',
-//       value,
-//       onChange: this.onChange
-//     };
-
-//     // Finally, render it!
-//     return (
-//       <Autosuggest
-//         suggestions={suggestions.slice(0, 5)}
-//         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-//         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-//         getSuggestionValue={this.getSuggestionValue}
-//         renderSuggestion={this.renderSuggestion}
-//         inputProps={inputProps}
-//       />
-//     );
-//   }
-// }

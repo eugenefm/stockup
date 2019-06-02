@@ -4,6 +4,7 @@ import {Line} from 'react-chartjs-2';
 export default class StockChart extends Component {
   
   render() {
+    // chart.js data options
     const data = {
       labels: this.props.labels,
       datasets: [
@@ -32,6 +33,7 @@ export default class StockChart extends Component {
         }
       ]
     };
+    // chart.js canvas options
     const options = {
       scales: {
           xAxes: [{

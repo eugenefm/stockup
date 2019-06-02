@@ -85,6 +85,7 @@ export default class App extends Component {
       }
     })
 
+    // make the api call to get the series
     const promise2 = axios.get(url2 + ticker, {
       dataResponse: 'json'
     })
@@ -100,12 +101,14 @@ export default class App extends Component {
         timeLabel.push(item.date)
       })
 
-      // calculate additional data with the time series
+      // profile data is inacurate so calculate additional data with the time series and price
       this.calculateData(timeData, response2, response1)
+
+      // set default chart length to the length of the series
       this.setChartLength(timeLabel, timeData, timeLabel.length)
 
       
-      // save the price in to state
+      // save the price and series to state
       this.setState({
         price: response1,
         timeSeries: response,
@@ -116,7 +119,7 @@ export default class App extends Component {
   }
   getNews = (name) => {
     const url = 'https://newsapi.org/v2/everything';
-    //make the api call
+    // get business news from the api 
     axios.get(url, {
       dataResponse: 'json',
       params: {
@@ -129,7 +132,7 @@ export default class App extends Component {
       }
     }).then(response =>{
       response = response.data.articles
-      // save the news to state
+      // save the news articles in an array to state
       this.setState({
         news: response
       })
@@ -145,7 +148,7 @@ export default class App extends Component {
     } else if (time === 253) {
       chartUnit = 'month'
     }
-
+    // save the selected chart length to state
     this.setState({
       selectedTimeData: newData,
       selectedTimeLabel: newLabel,
@@ -154,6 +157,7 @@ export default class App extends Component {
     })
   }
   handleTimeSelection = (timeSelection) => {
+    // set chart length from the time slection buttons
     this.setChartLength(this.state.timeLabel, this.state.timeData, timeSelection)
   }
 
@@ -169,7 +173,8 @@ export default class App extends Component {
     let yearData = data.slice((data.length - 253));
     let yearMax = Math.max(...yearData);
     let yearMin = Math.min(...yearData);
-
+    
+    //save range and change to state 
     this.setState({
       calcData: {
         change: change,
@@ -179,9 +184,11 @@ export default class App extends Component {
   }
 
   componentDidMount(){
+    // call the APIs on load
     this.getProfile(this.state.ticker);
     this.getPriceAndSeries(this.state.ticker);
   }
+  
   render() {
     return (
       <div className="App">

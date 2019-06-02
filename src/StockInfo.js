@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 export default function StockInfo(props) {
-  
+
+  // change the class of the 'Change' dispay if it's positive or negatice
   const change = () => {
     if (props.change < 0) {
       return <span className="change negative">{props.change} <FontAwesomeIcon icon={ faChevronDown }/></span>;
@@ -13,6 +14,8 @@ export default function StockInfo(props) {
       return <span className="change">{props.change}</span>;
     }
   }
+
+  // render the stock info
   return (
     <div className="stockInfo">
       <div className="mainInfo">
