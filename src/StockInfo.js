@@ -24,7 +24,7 @@ export default function StockInfo(props) {
         </div>
         <div>
           <h2>{props.companyName} <span>({props.ticker})</span></h2>
-          <p><span className="price">Price: </span>{props.price}{change()}</p>
+          <p><span className="price"><span className="current">{props.price}</span>{change()}</span></p>
         </div>
       </div>
       <div className="descriptionAndList">

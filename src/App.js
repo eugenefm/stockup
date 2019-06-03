@@ -7,6 +7,7 @@ import SearchBarAuto from './SearchBarAuto';
 import NewsFeed from './NewsFeed';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
 
 export default class App extends Component {
@@ -91,7 +92,7 @@ export default class App extends Component {
 
     Promise.all([promise1, promise2]).then(response =>{
       // make the api call to get the timeseries
-      let response1 = response[0].data.price
+      let response1 = response[0].data.price.toFixed(2)
       let response2 = response[1].data.historical
       let timeData = [];
       let timeLabel = [];
@@ -164,7 +165,11 @@ export default class App extends Component {
 
     // change provided by the api is wrong so calculate our own with last closing price and current price
     let lastIndex = data.length;
-    let previousClose = series[(lastIndex - 2)].close;
+    let yesterday = [lastIndex - 1]
+    if((series[lastIndex - 1].date) === moment().format("YYYY-MM-DD")) {
+      yesterday = [lastIndex - 2]
+    }
+    let previousClose = series[yesterday].close;
     let change = (price - previousClose).toFixed(2);
 
 

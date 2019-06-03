@@ -125,20 +125,26 @@ img {
     .mainInfo {
       display: flex;
       justify-content: flex-start;
+
       .price {
         font-family: 'Nunito', sans-serif;
-        font-weight:600;
-      }
-      .change {
-        padding: 2px 10px;
+        font-weight: 600;
         display: inline-block;
         border-radius: 14px;
-        color: #fff;
-        background: #2c3e50;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-        margin-left: 10px;
-        font-weight: 600;
-        font-family: 'Nunito', sans-serif;
+
+      .current {
+        color: #2c3e50;
+        background: #ecf0f1;
+        padding: 2px 10px 2px 15px;
+        border-radius: 14px 0 0 14px;
+      }
+
+      }
+      .change {
+        color: #fff;
+        padding: 2px 15px 2px 10px;
+        border-radius: 0 14px 14px 0;
       }
 
       .positive {
@@ -148,10 +154,14 @@ img {
         background: #c0392b;
       }
     }
-    h2 span {
+    h2 {
+      line-height: 1.1;
+
+      span {
       font-size: 1rem;
       font-family: 'Nunito Sans', sans-serif;
       font-weight: 300;
+      }
     }
 
     p {
@@ -217,12 +227,14 @@ img {
     height: 50px;
     padding: 10px 20px;
     font-weight: 300;
+    -webkit-appearance: none;
     border: none;
     border-radius: 25px;
     box-shadow: 0 2px 5px rgba(0, 0 , 0, 0.3);
   }
   &__input:focus {
     outline: none;
+    box-shadow:inset 0 -1px 5px -2px rgba(0, 0 , 0, 1), 0 2px 5px rgba(0, 0 , 0, 0.3);
   }
   &__container--open .react-autosuggest__input {
     border-bottom-left-radius: 0;
@@ -323,7 +335,8 @@ img {
       height: 0;
       overflow: hidden;
       padding-top: 75%;
-      position: relative
+      position: relative;
+      background: #183f8c;
     }
     .articleSource {
       text-transform: uppercase;
@@ -348,15 +361,17 @@ img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: all 1000ms;
+      transition: all 500ms;
       filter: grayscale(1);
+      opacity: .7;
 
       &:hover, &:focus {
-        width: 110%;
-        height: 110%;
-        top: -5%;
-        left: -5%;
+        width: 105%;
+        height: 105%;
+        top: -2.5%;
+        left: -2.55%;
         filter: grayscale(0);
+        opacity: 1;
       }
     }
   }
