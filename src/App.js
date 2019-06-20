@@ -27,7 +27,8 @@ export default class App extends Component {
       companyName: '',
       mktCap: '',
       news: [],
-      calcData: {}
+      calcData: {},
+      marketStatus: true
     }
   }
   handleData = (data) => {
@@ -73,6 +74,20 @@ export default class App extends Component {
       })
     })
   }
+  getMarketStatus = () => {
+    const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
+    //make the api call to get market status
+    axios.get( url, {
+      dataResponse: 'json'
+    }).then(response =>{
+      response = response.data.isTheStockMarketOpen
+      // save full response and array of valid tickers to the component's state
+      this.setState({
+        marketStatus: response
+      })
+    })
+  }
+
   getPriceAndSeries = (ticker) => {
     const url = 'https://financialmodelingprep.com/api/company/real-time-price/';
     const url2 = 'https://financialmodelingprep.com/api/v3/historical-price-full/';
@@ -128,7 +143,7 @@ export default class App extends Component {
         language: 'en',
         pageSize: 12,
         sortBy: 'publishedAt',
-        q: encodeURI(name)
+        q: name
       }
     }).then(response =>{
       response = response.data.articles
@@ -164,10 +179,11 @@ export default class App extends Component {
   calculateData = (data, series, price) => {
 
     // change provided by the api is wrong so calculate our own with last closing price and current price
+    // console.log(series)
     let lastIndex = data.length;
-    let yesterday = [lastIndex - 1]
-    if((series[lastIndex - 1].date) === moment().format("YYYY-MM-DD")) {
-      yesterday = [lastIndex - 2]
+    let yesterday = lastIndex - 2
+    if(this.state.marketStatus && (series[lastIndex - 1].date) !== moment().format("YYYY-MM-DD")) {
+      yesterday = lastIndex - 1
     }
     let previousClose = series[yesterday].close;
     let change = (price - previousClose).toFixed(2);
@@ -191,6 +207,7 @@ export default class App extends Component {
     // call the APIs on load
     this.getProfile(this.state.ticker);
     this.getPriceAndSeries(this.state.ticker);
+    this.getMarketStatus()
   }
 
   render() {
@@ -219,8 +236,8 @@ export default class App extends Component {
         </main>
         <footer>
           <div className='wrapper footerContent'>
-            <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com">Eugene Michasiw</a>.</p>
-            <p>Financial data provided by <a href="https://financialmodelingprep.com/">Financial Modeling Prep</a>. News provided by <a href="https://newsapi.org/">NewsAPI.org</a>.</p>
+            <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com" target="_blank" rel="noopener noreferrer">Eugene Michasiw</a>.</p>
+            <p>Financial data provided by <a href="https://financialmodelingprep.com/" target="_blank" rel="noopener noreferrer">Financial Modeling Prep</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>.</p>
           </div>
         </footer>
           
