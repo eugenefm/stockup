@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/eugeneMichasiwProject5/static/css/main.3dc8c61d.chunk.css",
-    "main.js": "/eugeneMichasiwProject5/static/js/main.11d28da2.chunk.js",
-    "main.js.map": "/eugeneMichasiwProject5/static/js/main.11d28da2.chunk.js.map",
-    "runtime~main.js": "/eugeneMichasiwProject5/static/js/runtime~main.1bc03b7e.js",
-    "runtime~main.js.map": "/eugeneMichasiwProject5/static/js/runtime~main.1bc03b7e.js.map",
-    "static/js/2.ac6c5bbd.chunk.js": "/eugeneMichasiwProject5/static/js/2.ac6c5bbd.chunk.js",
-    "static/js/2.ac6c5bbd.chunk.js.map": "/eugeneMichasiwProject5/static/js/2.ac6c5bbd.chunk.js.map",
-    "index.html": "/eugeneMichasiwProject5/index.html",
-    "precache-manifest.164e57857fa519f9b93b718f6f672121.js": "/eugeneMichasiwProject5/precache-manifest.164e57857fa519f9b93b718f6f672121.js",
-    "service-worker.js": "/eugeneMichasiwProject5/service-worker.js",
-    "static/css/main.3dc8c61d.chunk.css.map": "/eugeneMichasiwProject5/static/css/main.3dc8c61d.chunk.css.map",
-    "static/media/logo.svg": "/eugeneMichasiwProject5/static/media/logo.78679e07.svg"
+    "main.css": "/static/css/main.be7f08dd.chunk.css",
+    "main.js": "/static/js/main.1b671ccd.chunk.js",
+    "main.js.map": "/static/js/main.1b671ccd.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/js/2.d08d1721.chunk.js": "/static/js/2.d08d1721.chunk.js",
+    "static/js/2.d08d1721.chunk.js.map": "/static/js/2.d08d1721.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.2402a5a30f21485c431a586d689e01df.js": "/precache-manifest.2402a5a30f21485c431a586d689e01df.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.be7f08dd.chunk.css.map": "/static/css/main.be7f08dd.chunk.css.map",
+    "static/media/logo.svg": "/static/media/logo.78679e07.svg"
   }
 }
