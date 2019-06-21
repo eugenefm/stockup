@@ -8,7 +8,7 @@ export default function StockInfo(props) {
   const change = () => {
     if (props.change < 0) {
       return <span className="change negative">{props.change} <FontAwesomeIcon icon={ faChevronDown }/></span>;
-    } else if (props.change > 0) {
+    } else if (props.change >= 0) {
       return <span className="change positive">{props.change} <FontAwesomeIcon icon={ faChevronUp }/></span>;
     } else {
       return <span className="change">{props.change}</span>;
