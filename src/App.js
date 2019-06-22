@@ -28,7 +28,8 @@ export default class App extends Component {
       mktCap: '',
       news: [],
       calcData: {},
-      marketStatus: true
+      marketStatus: true,
+      apiError: true
     }
   }
   handleData = (data) => {
@@ -72,6 +73,11 @@ export default class App extends Component {
         companyName: companyName,
         mktCap: mktCap
       })
+    }).catch(error => {
+      console.log(error)
+      this.setState({
+        apiError: true
+      })
     })
   }
   getMarketStatus = () => {
@@ -84,6 +90,11 @@ export default class App extends Component {
       // save full response and array of valid tickers to the component's state
       this.setState({
         marketStatus: response
+      })
+    }).catch(error => {
+      console.log(error)
+      this.setState({
+        apiError: true
       })
     })
   }
@@ -114,6 +125,11 @@ export default class App extends Component {
       response2.forEach((item) => {
         timeData.push(item.close)
         timeLabel.push(item.date)
+      }).catch(error => {
+        console.log(error)
+        this.setState({
+          apiError: true
+        })
       })
 
       // profile data is inacurate so calculate additional data with the time series and price
@@ -150,6 +166,11 @@ export default class App extends Component {
       // save the news articles in an array to state
       this.setState({
         news: response
+      })
+    }).catch(error => {
+      console.log(error)
+      this.setState({
+        apiError: true
       })
     })
   }
@@ -202,6 +223,11 @@ export default class App extends Component {
       }
     });   
   }
+  closeError = () => {
+    this.setState ({
+      apiError: false
+    })
+  }
 
   componentDidMount(){
     // call the APIs on load
@@ -233,6 +259,10 @@ export default class App extends Component {
         </header>
         <main className='wrapper'>
           <NewsFeed newsFeed={this.state.news} />
+          {this.state.apiError && (<div className='error'>
+            <p>The Financial Modeling Prep API is currently experiencing issues that may impact the performance of this application.</p>
+            <button onClick={this.closeError}>X</button>
+          </div>)}
         </main>
         <footer>
           <div className='wrapper footerContent'>
