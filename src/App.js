@@ -14,7 +14,7 @@ export default class App extends Component {
   constructor() {
     super()
     this.state={
-      ticker: 'GOOG',
+      ticker: 'AAPL',
       profile: [],
       price: 0,
       timeSeries: [],
@@ -41,17 +41,24 @@ export default class App extends Component {
     this.getPriceAndSeries(data);
   }
   getProfile = (ticker) => {
-    const url = 'https://financialmodelingprep.com/api/v3/company/profile/';
+    const url = 'https://api.unibit.ai/api/companyprofile/';
+
+    const key = process.env.REACT_APP_UNIBIT_KEY
+    console.log(key)
     //make the api call
     axios({
       method: 'GET',
       url: url + ticker,
-      dataResponse: 'json'
+      dataResponse: 'json',
+      params: {
+        AccessKey: key
+      }
     }).then(response =>{
-      response = response.data.profile
-      
+      response = response.data['company profile']
+      console.log(response)
+
       // clean up company names 
-      let companyName = response.companyName
+      let companyName = response.company_name
       if(companyName.includes(' Inc')){
         companyName = companyName.substr(0,companyName.indexOf(' Inc'));
       } else if(companyName.includes(' Ltd')){
@@ -60,18 +67,17 @@ export default class App extends Component {
         companyName = companyName.substr(0,companyName.indexOf(' (The)'));
       }
 
-      // remove zeros from billion dollar market caps and append a B
-      let mktCap = response.mktCap 
-      if (mktCap >= 1000000000) {
-        mktCap = (Math.round((mktCap / 1000000000) * 100) / 100) + ' B'
-      }
+      // // remove zeros from billion dollar market caps and append a B
+      // let mktCap = response.mktCap 
+      // if (mktCap >= 1000000000) {
+      //   mktCap = (Math.round((mktCap / 1000000000) * 100) / 100) + ' B'
+      // }
       
       this.getNews(companyName);
       // save profile to state
       this.setState({
         profile: response,
-        companyName: companyName,
-        mktCap: mktCap
+        companyName: companyName
       })
     }).catch(error => {
       console.log(error)
@@ -80,24 +86,24 @@ export default class App extends Component {
       })
     })
   }
-  getMarketStatus = () => {
-    const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
-    //make the api call to get market status
-    axios.get( url, {
-      dataResponse: 'json'
-    }).then(response =>{
-      response = response.data.isTheStockMarketOpen
-      // save full response and array of valid tickers to the component's state
-      this.setState({
-        marketStatus: response
-      })
-    }).catch(error => {
-      console.log(error)
-      this.setState({
-        apiError: true
-      })
-    })
-  }
+  // getMarketStatus = () => {
+  //   const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
+  //   //make the api call to get market status
+  //   axios.get( url, {
+  //     dataResponse: 'json'
+  //   }).then(response =>{
+  //     response = response.data.isTheStockMarketOpen
+  //     // save full response and array of valid tickers to the component's state
+  //     this.setState({
+  //       marketStatus: response
+  //     })
+  //   }).catch(error => {
+  //     console.log(error)
+  //     this.setState({
+  //       apiError: true
+  //     })
+  //   })
+  // }
 
   getPriceAndSeries = (ticker) => {
     const url = 'https://financialmodelingprep.com/api/company/real-time-price/';
@@ -233,7 +239,7 @@ export default class App extends Component {
     // call the APIs on load
     this.getProfile(this.state.ticker);
     this.getPriceAndSeries(this.state.ticker);
-    this.getMarketStatus()
+    // this.getMarketStatus()
   }
 
   render() {

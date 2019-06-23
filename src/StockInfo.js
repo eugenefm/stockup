@@ -20,7 +20,7 @@ export default function StockInfo(props) {
     <div className="stockInfo">
       <div className="mainInfo">
         <div className="imageBox">
-          <img srcSet={props.profile.image} alt={props.companyName} />  
+          <img srcSet={`//logo.clearbit.com/${props.profile.website}`} alt={props.companyName} />  
         </div>
         <div>
           <h2>{props.companyName} <span>({props.ticker})</span></h2>
@@ -28,7 +28,7 @@ export default function StockInfo(props) {
         </div>
       </div>
       <div className="descriptionAndList">
-        <p className="stockDescription">{props.profile.description}</p>
+        <p className="stockDescription">{props.profile.company_description}</p>
         <ul className="infoList">
           <li>
             <span>52 Week Range</span>
