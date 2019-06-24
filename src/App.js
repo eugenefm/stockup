@@ -8,6 +8,7 @@ import NewsFeed from './NewsFeed';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
+import ReactGA from 'react-ga';
 
 
 export default class App extends Component {
@@ -29,13 +30,15 @@ export default class App extends Component {
       maxTimeLength: 0,
       companyName: '',
       news: [],
-      apiError: false
+      apiError: false,
+      search: false
     }
   }
   handleData = (data) => {
     // handle data from the search bar, save the ticker to state and call the apis
     this.setState({
-    ticker: data
+    ticker: data,
+    search: true
     })
     this.getProfile(data);
     this.getPriceAndSeries(data);
@@ -225,11 +228,17 @@ export default class App extends Component {
     })
   }
 
+  initializeReactGA = () => {
+    ReactGA.initialize('UA-142603434-1');
+    ReactGA.pageview('/homepage');
+  }
+
   componentDidMount(){
     // call the APIs on load
-    this.getProfile(this.state.ticker);
-    this.getPriceAndSeries(this.state.ticker);
-    this.getFinancialDetails(this.state.ticker);
+    // this.getProfile(this.state.ticker);
+    // this.getPriceAndSeries(this.state.ticker);
+    // this.getFinancialDetails(this.state.ticker);
+    this.initializeReactGA();
     // this.getMarketStatus()
   }
 
@@ -239,8 +248,15 @@ export default class App extends Component {
         <header>
           <div className={'topBar wrapper'}>
             <h1><img src={require('./logo.svg')} alt="Stockup.ninja" /></h1>
+            {this.state.search && <SearchBarAuto handlerFromParent={this.handleData} />}
+          </div>
+          {!this.state.search && (
+          <div className="homeSearch">
+            <h2>Search for a company or ticker.</h2>
             <SearchBarAuto handlerFromParent={this.handleData} />
           </div>
+          )}
+        {this.state.search && (
           <div className={'twoColumn wrapper'}>
             <StockInfo 
               ticker={this.state.ticker}
@@ -252,14 +268,18 @@ export default class App extends Component {
               />
             <StockChart labels={this.state.selectedTimeLabel} data={this.state.selectedTimeData} handlerFromParent={this.handleTimeSelection} unit={this.state.selectedTimeUnit} max={this.state.maxTimeLength}/>
           </div>
+        )}  
+          
         </header>
-        <main className='wrapper'>
-          <NewsFeed newsFeed={this.state.news} />
-          {this.state.apiError && (<div className='error'>
-            <p>An error occured getting the appropriate data for this company.</p>
-            <button onClick={this.closeError}>X</button>
-          </div>)}
-        </main>
+        {this.state.search && (
+          <main className='wrapper'>
+            <NewsFeed newsFeed={this.state.news} />
+            {this.state.apiError && (<div className='error'>
+              <p>An error occured getting the appropriate data for this company.</p>
+              <button onClick={this.closeError}>X</button>
+            </div>)}
+          </main>
+        )}
         <footer>
           <div className='wrapper footerContent'>
             <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com" target="_blank" rel="noopener noreferrer">Eugene Michasiw</a>.</p>

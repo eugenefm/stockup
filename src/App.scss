@@ -14,6 +14,37 @@ body {
 header {
   background: linear-gradient(#1570bf, #183f8c);
   padding-bottom: 50px;
+  min-height: 90vh;
+
+  .homeSearch {
+    margin-top: 15vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    h2 {
+      margin: 20px;
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 300;
+      text-align: center;
+    }
+    form {
+      width: 80%;
+    }
+    .react-autosuggest__container {
+      width: 100%;
+
+    }
+
+    .react-autosuggest__input {
+      width: 100%;
+    }
+
+    .react-autosuggest__container--open .react-autosuggest__suggestions-container {
+      width: 100%;
+    }
+
+  }
 }
 .wrapper {
   width:90%;
@@ -27,6 +58,7 @@ footer {
   background: #2c3e50;
   padding: 20px 0;
   text-align: center;
+  min-height: 10vh;
 
   .footerContent{
     display: flex;
