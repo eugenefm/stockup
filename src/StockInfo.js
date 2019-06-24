@@ -20,7 +20,7 @@ export default function StockInfo(props) {
     <div className="stockInfo">
       <div className="mainInfo">
         <div className="imageBox">
-          <img srcSet={`//logo.clearbit.com/${props.profile.website}`} alt={props.companyName} />  
+          <img src={`//logo.clearbit.com/${props.profile.website}`} onError={(e)=>{e.target.onerror = null; e.target.src="./logoFallback.png"}} alt={props.companyName} />  
         </div>
         <div>
           <h2>{props.companyName} <span>({props.ticker})</span></h2>
