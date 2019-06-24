@@ -46,7 +46,10 @@ export default class App extends Component {
     axios({
       method: 'GET',
       url: url + ticker,
-      dataResponse: 'json'
+      dataResponse: 'json',
+      params: {
+        datatype: 'json'
+      }
     }).then(response =>{
       response = response.data.profile
       
