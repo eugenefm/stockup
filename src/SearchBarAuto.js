@@ -179,7 +179,7 @@ export default class SearchBarAuto extends Component {
 
     // input props set the parameters on the input
     const inputProps = {
-      placeholder: "Ticker: GOOG",
+      placeholder: "Ticker: AAPL",
       value,
       onChange: this.onChange,
       id: "stockSearch"

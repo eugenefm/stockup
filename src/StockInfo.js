@@ -28,7 +28,7 @@ export default function StockInfo(props) {
         </div>
       </div>
       <div className="descriptionAndList">
-        <p className="stockDescription">{props.profile.company_description}</p>
+        <p className="stockDescription">{props.profile.company_description && props.profile.company_description.length > 300 ? props.profile.company_description.slice(0, 300) + '...' : props.profile.company_description} <a href={props.profile.website} target="_blank" rel="noopener noreferrer">Learn&nbsp;More</a></p>
         <ul className="infoList">
           <li>
             <span>52 Week Range</span>

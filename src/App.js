@@ -287,7 +287,7 @@ export default class App extends Component {
         <footer>
           <div className='wrapper footerContent'>
             <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com" target="_blank" rel="noopener noreferrer">Eugene Michasiw</a>.</p>
-            <p>Financial data provided by <a href="https://financialmodelingprep.com/" target="_blank" rel="noopener noreferrer">Financial Modeling Prep</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>.</p>
+            <p>Financial data provided by <a href="https://worldtradingdata.com/" target="_blank" rel="noopener noreferrer">World Trading Data</a> and <a href="https://unibit.ai/" target="_blank" rel="noopener noreferrer">UniBit</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>. Logos provided by <a href="https://clearbit.com/" target="_blank" rel="noopener noreferrer">Clearbit</a>.</p>
           </div>
         </footer>
           
