@@ -252,7 +252,7 @@ export default class App extends Component {
           </div>
           {!this.state.search && (
           <div className="homeSearch">
-            <h2>Search for a company or ticker.</h2>
+            <h2>Search for a company by name or ticker.</h2>
             <SearchBarAuto handlerFromParent={this.handleData} />
           </div>
           )}

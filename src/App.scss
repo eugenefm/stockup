@@ -30,6 +30,7 @@ header {
     }
     form {
       width: 80%;
+      max-width: 600px;
     }
     .react-autosuggest__container {
       width: 100%;
@@ -38,6 +39,7 @@ header {
 
     .react-autosuggest__input {
       width: 100%;
+      text-align: center;
     }
 
     .react-autosuggest__container--open .react-autosuggest__suggestions-container {
@@ -55,7 +57,7 @@ main {
   padding: 50px 0;
 }
 footer {
-  background: #2c3e50;
+  background: #1b2631;
   padding: 20px 0;
   text-align: center;
   min-height: 10vh;
