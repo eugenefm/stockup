@@ -16,23 +16,69 @@ export default class SearchBarAuto extends Component {
     };    
   }
 
+  // getTickers = () => {
+  //   const url = 'https://financialmodelingprep.com/api/stock/list/all?datatype=json';
+  //   //make the api call to get every available ticker sumbol
+  //   axios.get( url, {
+  //     dataResponse: 'json'
+  //   }).then(response =>{
+  //     response = response.data
+  //     let validTickers = response.map((ticker) => {
+  //       return ticker.Ticker;
+  //     });
+  //     // save full response and array of valid tickers to the component's state
+  //     this.setState({
+  //       tickers: response,
+  //       validTickers: validTickers
+  //     })
+  //   })
+  // }
+
   getTickers = () => {
-    const url = 'https://financialmodelingprep.com/api/stock/list/all?datatype=json';
-    //make the api call to get every available ticker sumbol
-    axios.get( url, {
-      dataResponse: 'json'
-    }).then(response =>{
-      response = response.data
-      let validTickers = response.map((ticker) => {
-        return ticker.Ticker;
+    const url = 'https://api.unibit.ai/api/companylist';
+
+    // make the api call to get the price
+    const nyseCall = axios.get(url, {
+      dataResponse: 'json',
+      params: {
+        AccessKey: 'demo',
+        exchange: 'NYSE',
+      }
+    })
+
+    const nasCall = axios.get(url, {
+      dataResponse: 'json',
+      params: {
+        AccessKey: 'demo',
+        exchange: 'NASDAQ',
+      }
+    })
+
+    const tsxCall = axios.get(url, {
+      dataResponse: 'json',
+      params: {
+        AccessKey: 'demo',
+        exchange: 'TSX',
+      }
+    })
+
+
+    Promise.all([nyseCall, nasCall, tsxCall]).then(response =>{
+
+      let tickers = [...response[0].data, ...response[1].data, ...response[2].data]
+      let validTickers = tickers.map((ticker) => {
+        return ticker.ticker;
       });
-      // save full response and array of valid tickers to the component's state
       this.setState({
-        tickers: response,
-        validTickers: validTickers
+        tickers,
+        validTickers
       })
+
+    }).catch(error => {
+      console.log(error)
     })
   }
+  
 
   componentDidMount(){
     // make api call on load
@@ -61,12 +107,12 @@ export default class SearchBarAuto extends Component {
   
   // get suggestion value
   getSuggestionValue = (suggestion) => {
-    return `${suggestion.Ticker} ${suggestion.companyName}`;
+    return `${suggestion.ticker} ${suggestion.companyName}`;
   }
   
   // render the list of of suggestions
   renderSuggestion = (suggestion, { query }) => {
-    const suggestionText = `${suggestion.Ticker} | ${suggestion.companyName}`;
+    const suggestionText = `${suggestion.ticker} | ${suggestion.companyName}`;
     const matches = AutosuggestHighlightMatch(suggestionText, query);
     const parts = AutosuggestHighlightParse(suggestionText, matches);
   
@@ -133,7 +179,7 @@ export default class SearchBarAuto extends Component {
 
     // input props set the parameters on the input
     const inputProps = {
-      placeholder: "Ticker: GOOG",
+      placeholder: "Ticker or Company Name",
       value,
       onChange: this.onChange,
       id: "stockSearch"

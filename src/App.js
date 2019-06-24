@@ -8,15 +8,19 @@ import NewsFeed from './NewsFeed';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
+import ReactGA from 'react-ga';
 
 
 export default class App extends Component {
   constructor() {
     super()
     this.state={
-      ticker: 'GOOG',
+      ticker: 'AAPL',
       profile: [],
       price: 0,
+      change: 0,
+      priceDetails: {},
+      financialDetails: {},
       timeSeries: [],
       timeData: [],
       timeLabel: [],
@@ -25,33 +29,38 @@ export default class App extends Component {
       selectedTimeUnit: '',
       maxTimeLength: 0,
       companyName: '',
-      mktCap: '',
       news: [],
-      calcData: {},
-      marketStatus: true,
-      apiError: true
+      apiError: false,
+      search: false
     }
   }
   handleData = (data) => {
     // handle data from the search bar, save the ticker to state and call the apis
     this.setState({
-    ticker: data
+    ticker: data,
+    search: true
     })
     this.getProfile(data);
     this.getPriceAndSeries(data);
+    this.getFinancialDetails(data);
   }
   getProfile = (ticker) => {
-    const url = 'https://financialmodelingprep.com/api/v3/company/profile/';
+    const url = 'https://api.unibit.ai/api/companyprofile/';
+
+    const key = process.env.REACT_APP_UNIBIT_KEY
     //make the api call
     axios({
       method: 'GET',
       url: url + ticker,
-      dataResponse: 'json'
+      dataResponse: 'json',
+      params: {
+        AccessKey: key
+      }
     }).then(response =>{
-      response = response.data.profile
-      
+      response = response.data['company profile']
+
       // clean up company names 
-      let companyName = response.companyName
+      let companyName = response.company_name
       if(companyName.includes(' Inc')){
         companyName = companyName.substr(0,companyName.indexOf(' Inc'));
       } else if(companyName.includes(' Ltd')){
@@ -60,18 +69,17 @@ export default class App extends Component {
         companyName = companyName.substr(0,companyName.indexOf(' (The)'));
       }
 
-      // remove zeros from billion dollar market caps and append a B
-      let mktCap = response.mktCap 
-      if (mktCap >= 1000000000) {
-        mktCap = (Math.round((mktCap / 1000000000) * 100) / 100) + ' B'
-      }
+      // // remove zeros from billion dollar market caps and append a B
+      // let mktCap = response.mktCap 
+      // if (mktCap >= 1000000000) {
+      //   mktCap = (Math.round((mktCap / 1000000000) * 100) / 100) + ' B'
+      // }
       
       this.getNews(companyName);
       // save profile to state
       this.setState({
         profile: response,
-        companyName: companyName,
-        mktCap: mktCap
+        companyName: companyName
       })
     }).catch(error => {
       console.log(error)
@@ -80,60 +88,75 @@ export default class App extends Component {
       })
     })
   }
-  getMarketStatus = () => {
-    const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
-    //make the api call to get market status
-    axios.get( url, {
-      dataResponse: 'json'
+  getFinancialDetails = (ticker) => {
+    const url = 'https://api.unibit.ai/api/financials/summary/';
+
+    const key = process.env.REACT_APP_UNIBIT_KEY
+    //make the api call
+    axios({
+      method: 'GET',
+      url: url + ticker,
+      dataResponse: 'json',
+      params: {
+        AccessKey: key
+      }
     }).then(response =>{
-      response = response.data.isTheStockMarketOpen
-      // save full response and array of valid tickers to the component's state
+      let financialDetails = response.data['Company financials summary']
       this.setState({
-        marketStatus: response
-      })
-    }).catch(error => {
-      console.log(error)
-      this.setState({
-        apiError: true
+        financialDetails
       })
     })
+    
   }
 
   getPriceAndSeries = (ticker) => {
-    const url = 'https://financialmodelingprep.com/api/company/real-time-price/';
-    const url2 = 'https://financialmodelingprep.com/api/v3/historical-price-full/';
-
+    const url = 'https://api.unibit.ai/api/realtimestock/';
+    const url2 = 'https://api.worldtradingdata.com/api/v1/history';
+    const uniKey = process.env.REACT_APP_UNIBIT_KEY
+    const worldKey = process.env.REACT_APP_WORLD_KEY
+    const date = moment().subtract(5, 'years').format("YYYY-MM-DD")
     // make the api call to get the price
     const promise1 = axios.get(url + ticker, {
       dataResponse: 'json',
       params: {
-        datatype: 'json'
+        AccessKey: uniKey,
+        size: 1
       }
     })
 
     // make the api call to get the series
-    const promise2 = axios.get(url2 + ticker, {
-      dataResponse: 'json'
+    const promise2 = axios.get(url2, {
+      dataResponse: 'json',
+      params: {
+        symbol: ticker,
+        api_token: worldKey,
+        date_from: date
+      }
     })
 
     Promise.all([promise1, promise2]).then(response =>{
       // make the api call to get the timeseries
-      let response1 = response[0].data.price.toFixed(2)
-      let response2 = response[1].data.historical
+      let priceDetails = response[0].data['Realtime Stock price'][0]
+      let timeseries = Object.entries(response[1].data.history)
+      let price = priceDetails.price
+
       let timeData = [];
       let timeLabel = [];
-      response2.forEach((item) => {
-        timeData.push(item.close)
-        timeLabel.push(item.date)
-      }).catch(error => {
-        console.log(error)
-        this.setState({
-          apiError: true
-        })
+      timeseries.forEach((item) => {
+        timeData.push(item[1].close)
+        timeLabel.push(item[0])
       })
+      
+      let change = price - timeData[0]
+      let priceDate = priceDetails.date.slice(0, 4) + '-' + priceDetails.date.slice(4, 6) + '-' + priceDetails.date.slice(6)
+      if (timeLabel[0] === priceDate) {
+        change = price - timeData[1]
+      }
+      change = change.toFixed(2)
+
 
       // profile data is inacurate so calculate additional data with the time series and price
-      this.calculateData(timeData, response2, response1)
+      // this.calculateData(timeData, response2, response1)
 
       // set default chart length to the length of the series
       this.setChartLength(timeLabel, timeData, timeLabel.length)
@@ -141,10 +164,12 @@ export default class App extends Component {
       
       // save the price and series to state
       this.setState({
-        price: response1,
-        timeSeries: response,
-        timeLabel: timeLabel,
-        timeData: timeData
+        priceDetails,
+        timeseries,
+        timeLabel,
+        timeData,
+        change,
+        price
       })
     })
   }
@@ -176,8 +201,8 @@ export default class App extends Component {
   }
 
   setChartLength = (label, data, time) => {
-    const newLabel = label.slice((label.length - time));
-    const newData = data.slice((data.length - time));
+    const newLabel = label.slice(0,  time);
+    const newData = data.slice(0, time);
     let chartUnit = 'year';
     if (time === 22) {
       chartUnit = 'day'
@@ -197,43 +222,24 @@ export default class App extends Component {
     this.setChartLength(this.state.timeLabel, this.state.timeData, timeSelection)
   }
 
-  calculateData = (data, series, price) => {
-
-    // change provided by the api is wrong so calculate our own with last closing price and current price
-    // console.log(series)
-    let lastIndex = data.length;
-    let yesterday = lastIndex - 2
-    if(this.state.marketStatus && (series[lastIndex - 1].date) !== moment().format("YYYY-MM-DD")) {
-      yesterday = lastIndex - 1
-    }
-    let previousClose = series[yesterday].close;
-    let change = (price - previousClose).toFixed(2);
-
-
-    // range provided by the api is out of date so calculate our own
-    let yearData = data.slice((data.length - 253));
-    let yearMax = Math.max(...yearData);
-    let yearMin = Math.min(...yearData);
-    
-    //save range and change to state 
-    this.setState({
-      calcData: {
-        change: change,
-        range: yearMin + " - " + yearMax
-      }
-    });   
-  }
   closeError = () => {
     this.setState ({
       apiError: false
     })
   }
 
+  initializeReactGA = () => {
+    ReactGA.initialize('UA-142603434-1');
+    ReactGA.pageview('/homepage');
+  }
+
   componentDidMount(){
     // call the APIs on load
-    this.getProfile(this.state.ticker);
-    this.getPriceAndSeries(this.state.ticker);
-    this.getMarketStatus()
+    // this.getProfile(this.state.ticker);
+    // this.getPriceAndSeries(this.state.ticker);
+    // this.getFinancialDetails(this.state.ticker);
+    this.initializeReactGA();
+    // this.getMarketStatus()
   }
 
   render() {
@@ -242,32 +248,42 @@ export default class App extends Component {
         <header>
           <div className={'topBar wrapper'}>
             <h1><img src={require('./logo.svg')} alt="Stockup.ninja" /></h1>
+            {this.state.search && <SearchBarAuto handlerFromParent={this.handleData} />}
+          </div>
+          {!this.state.search && (
+          <div className="homeSearch">
+            <h2>Search for a company or ticker.</h2>
             <SearchBarAuto handlerFromParent={this.handleData} />
           </div>
+          )}
+        {this.state.search && (
           <div className={'twoColumn wrapper'}>
             <StockInfo 
               ticker={this.state.ticker}
-              change={this.state.calcData.change}
+              change={this.state.change}
               price={this.state.price}
               profile={this.state.profile}
-              range={this.state.calcData.range}
-              mktCap={this.state.mktCap}
+              financialDetails={this.state.financialDetails}
               companyName={this.state.companyName}
               />
             <StockChart labels={this.state.selectedTimeLabel} data={this.state.selectedTimeData} handlerFromParent={this.handleTimeSelection} unit={this.state.selectedTimeUnit} max={this.state.maxTimeLength}/>
           </div>
+        )}  
+          
         </header>
-        <main className='wrapper'>
-          <NewsFeed newsFeed={this.state.news} />
-          {this.state.apiError && (<div className='error'>
-            <p>The Financial Modeling Prep API is currently experiencing issues that may impact the performance of this application.</p>
-            <button onClick={this.closeError}>X</button>
-          </div>)}
-        </main>
+        {this.state.search && (
+          <main className='wrapper'>
+            <NewsFeed newsFeed={this.state.news} />
+            {this.state.apiError && (<div className='error'>
+              <p>An error occured getting the appropriate data for this company.</p>
+              <button onClick={this.closeError}>X</button>
+            </div>)}
+          </main>
+        )}
         <footer>
           <div className='wrapper footerContent'>
             <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com" target="_blank" rel="noopener noreferrer">Eugene Michasiw</a>.</p>
-            <p>Financial data provided by <a href="https://financialmodelingprep.com/" target="_blank" rel="noopener noreferrer">Financial Modeling Prep</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>.</p>
+            <p>Financial data provided by <a href="https://worldtradingdata.com/" target="_blank" rel="noopener noreferrer">World Trading Data</a> and <a href="https://unibit.ai/" target="_blank" rel="noopener noreferrer">UniBit</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>. Logos provided by <a href="https://clearbit.com/" target="_blank" rel="noopener noreferrer">Clearbit</a>.</p>
           </div>
         </footer>
           
