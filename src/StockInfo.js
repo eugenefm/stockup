@@ -32,19 +32,23 @@ export default function StockInfo(props) {
         <ul className="infoList">
           <li>
             <span>52 Week Range</span>
-            <span>{props.range}</span>
+            <span>{props.financialDetails.week_52_range}</span>
           </li>
           <li>
             <span>Beta</span>
-            <span>{props.profile.beta}</span>
+            <span>{props.financialDetails.beta}</span>
           </li>
           <li>
             <span>Market Cap</span>
-            <span>{props.mktCap}</span>
+            <span>{props.financialDetails.market_cap}</span>
           </li>
           <li>
-            <span>Exchange</span>
-            <span>{props.profile.exchange}</span>
+            <span>PE</span>
+            <span>{props.financialDetails.pe_ratio}</span>
+          </li>
+          <li>
+            <span>EPS</span>
+            <span>{props.financialDetails.eps}</span>
           </li>
           <li>
             <span>Sector</span>

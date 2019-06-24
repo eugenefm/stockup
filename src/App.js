@@ -17,6 +17,9 @@ export default class App extends Component {
       ticker: 'AAPL',
       profile: [],
       price: 0,
+      change: 0,
+      priceDetails: {},
+      financialDetails: {},
       timeSeries: [],
       timeData: [],
       timeLabel: [],
@@ -25,11 +28,8 @@ export default class App extends Component {
       selectedTimeUnit: '',
       maxTimeLength: 0,
       companyName: '',
-      mktCap: '',
       news: [],
-      calcData: {},
-      marketStatus: true,
-      apiError: true
+      apiError: false
     }
   }
   handleData = (data) => {
@@ -39,6 +39,7 @@ export default class App extends Component {
     })
     this.getProfile(data);
     this.getPriceAndSeries(data);
+    this.getFinancialDetails(data);
   }
   getProfile = (ticker) => {
     const url = 'https://api.unibit.ai/api/companyprofile/';
@@ -86,6 +87,27 @@ export default class App extends Component {
       })
     })
   }
+  getFinancialDetails = (ticker) => {
+    const url = 'https://api.unibit.ai/api/financials/summary/';
+
+    const key = process.env.REACT_APP_UNIBIT_KEY
+    //make the api call
+    axios({
+      method: 'GET',
+      url: url + ticker,
+      dataResponse: 'json',
+      params: {
+        AccessKey: key
+      }
+    }).then(response =>{
+      let financialDetails = response.data['Company financials summary']
+      console.log(response)
+      this.setState({
+        financialDetails
+      })
+    })
+    
+  }
   // getMarketStatus = () => {
   //   const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
   //   //make the api call to get market status
@@ -106,40 +128,56 @@ export default class App extends Component {
   // }
 
   getPriceAndSeries = (ticker) => {
-    const url = 'https://financialmodelingprep.com/api/company/real-time-price/';
-    const url2 = 'https://financialmodelingprep.com/api/v3/historical-price-full/';
+    const url = 'https://api.unibit.ai/api/realtimestock/';
+    const url2 = 'https://api.worldtradingdata.com/api/v1/history';
+    const uniKey = process.env.REACT_APP_UNIBIT_KEY
+    const worldKey = process.env.REACT_APP_WORLD_KEY
+    const date = moment().subtract(5, 'years').format("YYYY-MM-DD")
+    console.log(date)
 
     // make the api call to get the price
     const promise1 = axios.get(url + ticker, {
       dataResponse: 'json',
       params: {
-        datatype: 'json'
+        AccessKey: uniKey,
+        size: 1
       }
     })
 
     // make the api call to get the series
-    const promise2 = axios.get(url2 + ticker, {
-      dataResponse: 'json'
+    const promise2 = axios.get(url2, {
+      dataResponse: 'json',
+      params: {
+        symbol: ticker,
+        api_token: worldKey,
+        date_from: date
+      }
     })
 
     Promise.all([promise1, promise2]).then(response =>{
       // make the api call to get the timeseries
-      let response1 = response[0].data.price.toFixed(2)
-      let response2 = response[1].data.historical
+      let priceDetails = response[0].data['Realtime Stock price'][0]
+      let timeseries = Object.entries(response[1].data.history)
+      let price = priceDetails.price
+
       let timeData = [];
       let timeLabel = [];
-      response2.forEach((item) => {
-        timeData.push(item.close)
-        timeLabel.push(item.date)
-      }).catch(error => {
-        console.log(error)
-        this.setState({
-          apiError: true
-        })
+      timeseries.forEach((item) => {
+        timeData.push(item[1].close)
+        timeLabel.push(item[0])
       })
+      
+      let change = price - timeData[0]
+      let priceDate = priceDetails.date.slice(0, 4) + '-' + priceDetails.date.slice(4, 6) + '-' + priceDetails.date.slice(6)
+      if (timeLabel[0] === priceDate) {
+        change = price - timeData[1]
+        console.log('Same Moment')
+      }
+      change = change.toFixed(2)
+
 
       // profile data is inacurate so calculate additional data with the time series and price
-      this.calculateData(timeData, response2, response1)
+      // this.calculateData(timeData, response2, response1)
 
       // set default chart length to the length of the series
       this.setChartLength(timeLabel, timeData, timeLabel.length)
@@ -147,10 +185,12 @@ export default class App extends Component {
       
       // save the price and series to state
       this.setState({
-        price: response1,
-        timeSeries: response,
-        timeLabel: timeLabel,
-        timeData: timeData
+        priceDetails,
+        timeseries,
+        timeLabel,
+        timeData,
+        change,
+        price
       })
     })
   }
@@ -182,8 +222,8 @@ export default class App extends Component {
   }
 
   setChartLength = (label, data, time) => {
-    const newLabel = label.slice((label.length - time));
-    const newData = data.slice((data.length - time));
+    const newLabel = label.slice(0,  time);
+    const newData = data.slice(0, time);
     let chartUnit = 'year';
     if (time === 22) {
       chartUnit = 'day'
@@ -203,32 +243,6 @@ export default class App extends Component {
     this.setChartLength(this.state.timeLabel, this.state.timeData, timeSelection)
   }
 
-  calculateData = (data, series, price) => {
-
-    // change provided by the api is wrong so calculate our own with last closing price and current price
-    // console.log(series)
-    let lastIndex = data.length;
-    let yesterday = lastIndex - 2
-    if(this.state.marketStatus && (series[lastIndex - 1].date) !== moment().format("YYYY-MM-DD")) {
-      yesterday = lastIndex - 1
-    }
-    let previousClose = series[yesterday].close;
-    let change = (price - previousClose).toFixed(2);
-
-
-    // range provided by the api is out of date so calculate our own
-    let yearData = data.slice((data.length - 253));
-    let yearMax = Math.max(...yearData);
-    let yearMin = Math.min(...yearData);
-    
-    //save range and change to state 
-    this.setState({
-      calcData: {
-        change: change,
-        range: yearMin + " - " + yearMax
-      }
-    });   
-  }
   closeError = () => {
     this.setState ({
       apiError: false
@@ -239,6 +253,7 @@ export default class App extends Component {
     // call the APIs on load
     this.getProfile(this.state.ticker);
     this.getPriceAndSeries(this.state.ticker);
+    this.getFinancialDetails(this.state.ticker);
     // this.getMarketStatus()
   }
 
@@ -253,11 +268,10 @@ export default class App extends Component {
           <div className={'twoColumn wrapper'}>
             <StockInfo 
               ticker={this.state.ticker}
-              change={this.state.calcData.change}
+              change={this.state.change}
               price={this.state.price}
               profile={this.state.profile}
-              range={this.state.calcData.range}
-              mktCap={this.state.mktCap}
+              financialDetails={this.state.financialDetails}
               companyName={this.state.companyName}
               />
             <StockChart labels={this.state.selectedTimeLabel} data={this.state.selectedTimeData} handlerFromParent={this.handleTimeSelection} unit={this.state.selectedTimeUnit} max={this.state.maxTimeLength}/>
@@ -266,7 +280,7 @@ export default class App extends Component {
         <main className='wrapper'>
           <NewsFeed newsFeed={this.state.news} />
           {this.state.apiError && (<div className='error'>
-            <p>The Financial Modeling Prep API is currently experiencing issues that may impact the performance of this application.</p>
+            <p>An error occured getting the appropriate data for this company.</p>
             <button onClick={this.closeError}>X</button>
           </div>)}
         </main>
