@@ -45,7 +45,6 @@ export default class App extends Component {
     const url = 'https://api.unibit.ai/api/companyprofile/';
 
     const key = process.env.REACT_APP_UNIBIT_KEY
-    console.log(key)
     //make the api call
     axios({
       method: 'GET',
@@ -56,7 +55,6 @@ export default class App extends Component {
       }
     }).then(response =>{
       response = response.data['company profile']
-      console.log(response)
 
       // clean up company names 
       let companyName = response.company_name
@@ -101,31 +99,12 @@ export default class App extends Component {
       }
     }).then(response =>{
       let financialDetails = response.data['Company financials summary']
-      console.log(response)
       this.setState({
         financialDetails
       })
     })
     
   }
-  // getMarketStatus = () => {
-  //   const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
-  //   //make the api call to get market status
-  //   axios.get( url, {
-  //     dataResponse: 'json'
-  //   }).then(response =>{
-  //     response = response.data.isTheStockMarketOpen
-  //     // save full response and array of valid tickers to the component's state
-  //     this.setState({
-  //       marketStatus: response
-  //     })
-  //   }).catch(error => {
-  //     console.log(error)
-  //     this.setState({
-  //       apiError: true
-  //     })
-  //   })
-  // }
 
   getPriceAndSeries = (ticker) => {
     const url = 'https://api.unibit.ai/api/realtimestock/';
@@ -133,8 +112,6 @@ export default class App extends Component {
     const uniKey = process.env.REACT_APP_UNIBIT_KEY
     const worldKey = process.env.REACT_APP_WORLD_KEY
     const date = moment().subtract(5, 'years').format("YYYY-MM-DD")
-    console.log(date)
-
     // make the api call to get the price
     const promise1 = axios.get(url + ticker, {
       dataResponse: 'json',
@@ -171,7 +148,6 @@ export default class App extends Component {
       let priceDate = priceDetails.date.slice(0, 4) + '-' + priceDetails.date.slice(4, 6) + '-' + priceDetails.date.slice(6)
       if (timeLabel[0] === priceDate) {
         change = price - timeData[1]
-        console.log('Same Moment')
       }
       change = change.toFixed(2)
 
