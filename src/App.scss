@@ -14,7 +14,16 @@ body {
 header {
   background: linear-gradient(#1570bf, #183f8c);
   padding-bottom: 50px;
-  min-height: 90vh;
+  min-height: 100vh;
+
+  .particles {
+    
+    height: 100%;
+
+    canvas {
+      position: absolute;
+    }
+  }
 
   .homeSearch {
     margin-top: 15vh;

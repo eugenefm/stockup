@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import ReactGA from 'react-ga';
+import Particles from 'react-particles-js';
 
 
 export default class App extends Component {
@@ -43,6 +44,10 @@ export default class App extends Component {
     this.getProfile(data);
     this.getPriceAndSeries(data);
     this.getFinancialDetails(data);
+    ReactGA.event({
+      category: 'User',
+      action: 'API Query'
+    });
   }
   getProfile = (ticker) => {
     const url = 'https://api.unibit.ai/api/companyprofile/';
@@ -138,7 +143,7 @@ export default class App extends Component {
       // make the api call to get the timeseries
       let priceDetails = response[0].data['Realtime Stock price'][0]
       let timeseries = Object.entries(response[1].data.history)
-      let price = priceDetails.price
+      let price = priceDetails.price.toFixed(2)
 
       let timeData = [];
       let timeLabel = [];
@@ -175,11 +180,12 @@ export default class App extends Component {
   }
   getNews = (name) => {
     const url = 'https://newsapi.org/v2/everything';
+    const key = process.env.REACT_APP_NEWS_KEY
     // get business news from the api 
     axios.get(url, {
       dataResponse: 'json',
       params: {
-        apiKey: '6b5dae4615c944b1aabc8497566543fa',
+        apiKey: key,
         sources: '"financial-post,cnbc,the-wall-street-journal,fortune,business-insider"',
         language: 'en',
         pageSize: 12,
@@ -230,22 +236,118 @@ export default class App extends Component {
 
   initializeReactGA = () => {
     ReactGA.initialize('UA-142603434-1');
-    ReactGA.pageview('/homepage');
+    ReactGA.pageview('/');
   }
 
   componentDidMount(){
-    // call the APIs on load
-    // this.getProfile(this.state.ticker);
-    // this.getPriceAndSeries(this.state.ticker);
-    // this.getFinancialDetails(this.state.ticker);
     this.initializeReactGA();
-    // this.getMarketStatus()
   }
 
   render() {
     return (
       <div className="App">
         <header>
+          {!this.state.search && (
+            <Particles
+              className="particles" 
+              params={{
+                "particles": {
+                  "number": {
+                    "value": 80,
+                    "density": {
+                      "enable": true,
+                      "value_area": 800
+                    }
+                  },
+                  "color": {
+                    "value": "#ffffff"
+                  },
+                  "shape": {
+                    "type": "circle",
+                    "stroke": {
+                      "width": 0,
+                      "color": "#000000"
+                    },
+                    "polygon": {
+                      "nb_sides": 5
+                    },
+                  },
+                  "opacity": {
+                    "value": 0.2,
+                    "random": false,
+                    "anim": {
+                      "enable": false,
+                      "speed": 1,
+                      "opacity_min": 0.05,
+                      "sync": false
+                    }
+                  },
+                  "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                      "enable": false,
+                      "speed": 40,
+                      "size_min": 0.1,
+                      "sync": false
+                    }
+                  },
+                  "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                  },
+                  "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "bounce",
+                    "bounce": false,
+                    "attract": {
+                      "enable": false,
+                      "rotateX": 600,
+                      "rotateY": 1200
+                    }
+                  }
+                },
+                "interactivity": {
+                  "detect_on": "canvas",
+                  "events": {
+                    "resize": true
+                  },
+                  "modes": {
+                    "grab": {
+                      "distance": 400,
+                      "line_linked": {
+                        "opacity": 1
+                      }
+                    },
+                    "bubble": {
+                      "distance": 400,
+                      "size": 40,
+                      "duration": 2,
+                      "opacity": 8,
+                      "speed": 3
+                    },
+                    "repulse": {
+                      "distance": 200,
+                      "duration": 0.4
+                    },
+                    "push": {
+                      "particles_nb": 4
+                    },
+                    "remove": {
+                      "particles_nb": 2
+                    }
+                  }
+                },
+                "retina_detect": true
+              }} />
+            )}
           <div className={'topBar wrapper'}>
             <h1><img src={require('./logo.svg')} alt="Stockup.ninja" /></h1>
             {this.state.search && <SearchBarAuto handlerFromParent={this.handleData} />}
@@ -280,13 +382,14 @@ export default class App extends Component {
             </div>)}
           </main>
         )}
-        <footer>
-          <div className='wrapper footerContent'>
-            <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com" target="_blank" rel="noopener noreferrer">Eugene Michasiw</a>.</p>
-            <p>Financial data provided by <a href="https://worldtradingdata.com/" target="_blank" rel="noopener noreferrer">World Trading Data</a> and <a href="https://unibit.ai/" target="_blank" rel="noopener noreferrer">UniBit</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>. Logos provided by <a href="https://clearbit.com/" target="_blank" rel="noopener noreferrer">Clearbit</a>.</p>
-          </div>
-        </footer>
-          
+        {this.state.search && (
+          <footer>
+            <div className='wrapper footerContent'>
+              <p>Built with <FontAwesomeIcon icon={ faHeart }/> by <a href="https://michasiw.com" target="_blank" rel="noopener noreferrer">Eugene Michasiw</a>.</p>
+              <p>Financial data provided by <a href="https://worldtradingdata.com/" target="_blank" rel="noopener noreferrer">World Trading Data</a> and <a href="https://unibit.ai/" target="_blank" rel="noopener noreferrer">UniBit</a>. News provided by <a href="https://newsapi.org/" target="_blank" rel="noopener noreferrer">NewsAPI.org</a>. Logos provided by <a href="https://clearbit.com/" target="_blank" rel="noopener noreferrer">Clearbit</a>.</p>
+            </div>
+          </footer>
+        )}
       </div>
     )
   }
