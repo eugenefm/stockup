@@ -1,19 +1,20 @@
-import React, { Component } from "react";
-import "./App.scss";
-import axios from "axios";
-import StockInfo from "./StockInfo";
-import StockChart from "./StockChart";
-import SearchBarAuto from "./SearchBarAuto";
-import NewsFeed from "./NewsFeed";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import moment from "moment";
+import React, { Component } from 'react';
+import './App.scss';
+import axios from 'axios';
+import StockInfo from './StockInfo';
+import StockChart from './StockChart';
+import SearchBarAuto from './SearchBarAuto';
+import NewsFeed from './NewsFeed';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
+const apikey = process.env.REACT_APP_FMP_KEY;
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      ticker: "GOOG",
+      ticker: 'GOOG',
       profile: [],
       price: 0,
       timeSeries: [],
@@ -21,10 +22,10 @@ export default class App extends Component {
       timeLabel: [],
       selectedTimeData: [],
       selectedTimeLabel: [],
-      selectedTimeUnit: "",
+      selectedTimeUnit: '',
       maxTimeLength: 0,
-      companyName: "",
-      mktCap: "",
+      companyName: '',
+      mktCap: '',
       news: [],
       calcData: {},
       marketStatus: true,
@@ -40,14 +41,15 @@ export default class App extends Component {
     this.getPriceAndSeries(data);
   };
   getProfile = (ticker) => {
-    const url = "https://financialmodelingprep.com/api/v3/company/profile/";
+    const url = 'https://financialmodelingprep.com/api/v3/company/profile/';
     //make the api call
     axios({
-      method: "GET",
+      method: 'GET',
       url: url + ticker,
-      dataResponse: "json",
+      dataResponse: 'json',
       params: {
-        datatype: "json",
+        datatype: 'json',
+        apikey,
       },
     })
       .then((response) => {
@@ -55,18 +57,18 @@ export default class App extends Component {
 
         // clean up company names
         let companyName = response.companyName;
-        if (companyName.includes(" Inc")) {
-          companyName = companyName.substr(0, companyName.indexOf(" Inc"));
-        } else if (companyName.includes(" Ltd")) {
-          companyName = companyName.substr(0, companyName.indexOf(" Ltd"));
-        } else if (companyName.includes(" (The)")) {
-          companyName = companyName.substr(0, companyName.indexOf(" (The)"));
+        if (companyName.includes(' Inc')) {
+          companyName = companyName.substr(0, companyName.indexOf(' Inc'));
+        } else if (companyName.includes(' Ltd')) {
+          companyName = companyName.substr(0, companyName.indexOf(' Ltd'));
+        } else if (companyName.includes(' (The)')) {
+          companyName = companyName.substr(0, companyName.indexOf(' (The)'));
         }
 
         // remove zeros from billion dollar market caps and append a B
         let mktCap = response.mktCap;
         if (mktCap >= 1000000000) {
-          mktCap = Math.round((mktCap / 1000000000) * 100) / 100 + " B";
+          mktCap = Math.round((mktCap / 1000000000) * 100) / 100 + ' B';
         }
 
         this.getNews(companyName);
@@ -85,11 +87,12 @@ export default class App extends Component {
       });
   };
   getMarketStatus = () => {
-    const url = "https://financialmodelingprep.com/api/v3/is-the-market-open";
+    const url = 'https://financialmodelingprep.com/api/v3/is-the-market-open';
     //make the api call to get market status
     axios
       .get(url, {
-        dataResponse: "json",
+        dataResponse: 'json',
+        params: { apikey },
       })
       .then((response) => {
         response = response.data.isTheStockMarketOpen;
@@ -107,28 +110,30 @@ export default class App extends Component {
   };
 
   getPriceAndSeries = (ticker) => {
-    const url =
-      "https://financialmodelingprep.com/api/company/real-time-price/";
+    const url = 'https://financialmodelingprep.com/api/v3/quote/';
     const url2 =
-      "https://financialmodelingprep.com/api/v3/historical-price-full/";
+      'https://financialmodelingprep.com/api/v3/historical-price-full/';
 
     // make the api call to get the price
     const promise1 = axios.get(url + ticker, {
-      dataResponse: "json",
+      dataResponse: 'json',
       params: {
-        datatype: "json",
+        datatype: 'json',
+        apikey,
       },
     });
 
     // make the api call to get the series
     const promise2 = axios.get(url2 + ticker, {
-      dataResponse: "json",
+      dataResponse: 'json',
+      params: { apikey },
     });
 
     Promise.all([promise1, promise2])
       .then((response) => {
+        console.log(response[0]);
         // make the api call to get the timeseries
-        let response1 = response[0].data.price.toFixed(2);
+        let response1 = response[0].data[0].price.toFixed(2);
         let response2 = response[1].data.historical;
         let timeData = [];
         let timeLabel = [];
@@ -136,6 +141,8 @@ export default class App extends Component {
           timeData.push(item.close);
           timeLabel.push(item.date);
         });
+
+        console.log({ response1, response2 });
 
         // profile data is inacurate so calculate additional data with the time series and price
         this.calculateData(timeData, response2, response1);
@@ -160,18 +167,18 @@ export default class App extends Component {
   };
 
   getNews = (name) => {
-    const url = "https://newsapi.org/v2/everything";
+    const url = 'https://newsapi.org/v2/everything';
     // get business news from the api
     axios
       .get(url, {
-        dataResponse: "json",
+        dataResponse: 'json',
         params: {
-          apiKey: "6b5dae4615c944b1aabc8497566543fa",
+          apiKey: '6b5dae4615c944b1aabc8497566543fa',
           sources:
             '"financial-post,cnbc,the-wall-street-journal,fortune,business-insider"',
-          language: "en",
+          language: 'en',
           pageSize: 12,
-          sortBy: "publishedAt",
+          sortBy: 'publishedAt',
           q: name,
         },
       })
@@ -193,11 +200,11 @@ export default class App extends Component {
   setChartLength = (label, data, time) => {
     const newLabel = label.slice(label.length - time);
     const newData = data.slice(data.length - time);
-    let chartUnit = "year";
+    let chartUnit = 'year';
     if (time === 22) {
-      chartUnit = "day";
+      chartUnit = 'day';
     } else if (time === 253) {
-      chartUnit = "month";
+      chartUnit = 'month';
     }
     // save the selected chart length to state
     this.setState({
@@ -223,7 +230,7 @@ export default class App extends Component {
     let yesterday = lastIndex - 2;
     if (
       this.state.marketStatus &&
-      series[lastIndex - 1].date !== moment().format("YYYY-MM-DD")
+      series[lastIndex - 1].date !== moment().format('YYYY-MM-DD')
     ) {
       yesterday = lastIndex - 1;
     }
@@ -239,7 +246,7 @@ export default class App extends Component {
     this.setState({
       calcData: {
         change: change,
-        range: yearMin + " - " + yearMax,
+        range: yearMin + ' - ' + yearMax,
       },
     });
   };
@@ -258,15 +265,15 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className='App'>
         <header>
-          <div className={"topBar wrapper"}>
+          <div className={'topBar wrapper'}>
             <h1>
-              <img src={require("./logo.svg")} alt="Stockup.ninja" />
+              <img src={require('./logo.svg')} alt='Stockup.ninja' />
             </h1>
             <SearchBarAuto handlerFromParent={this.handleData} />
           </div>
-          <div className={"twoColumn wrapper"}>
+          <div className={'twoColumn wrapper'}>
             <StockInfo
               ticker={this.state.ticker}
               change={this.state.calcData.change}
@@ -285,10 +292,10 @@ export default class App extends Component {
             />
           </div>
         </header>
-        <main className="wrapper">
+        <main className='wrapper'>
           <NewsFeed newsFeed={this.state.news} />
           {this.state.apiError && (
-            <div className="error">
+            <div className='error'>
               <p>
                 The Financial Modeling Prep API is currently experiencing issues
                 that may impact the performance of this application.
@@ -298,30 +305,33 @@ export default class App extends Component {
           )}
         </main>
         <footer>
-          <div className="wrapper footerContent">
+          <div className='wrapper footerContent'>
             <p>
-              Built with <FontAwesomeIcon icon={faHeart} /> by{" "}
+              Built with <FontAwesomeIcon icon={faHeart} /> by{' '}
               <a
-                href="https://michasiw.com"
-                target="_blank"
-                rel="noopener noreferrer">
+                href='https://michasiw.com'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 Eugene Michasiw
               </a>
               .
             </p>
             <p>
-              Financial data provided by{" "}
+              Financial data provided by{' '}
               <a
-                href="https://financialmodelingprep.com/"
-                target="_blank"
-                rel="noopener noreferrer">
+                href='https://financialmodelingprep.com/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 Financial Modeling Prep
               </a>
-              . News provided by{" "}
+              . News provided by{' '}
               <a
-                href="https://newsapi.org/"
-                target="_blank"
-                rel="noopener noreferrer">
+                href='https://newsapi.org/'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
                 NewsAPI.org
               </a>
               .
