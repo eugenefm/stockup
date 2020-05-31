@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Qs from 'qs';
 import './App.scss';
 import axios from 'axios';
 import StockInfo from './StockInfo';
@@ -167,22 +168,31 @@ export default class App extends Component {
   };
 
   getNews = (name) => {
-    const url = 'https://newsapi.org/v2/everything';
+    const url = 'https://proxy.hackeryou.com';
+
     // get business news from the api
     axios
       .get(url, {
         dataResponse: 'json',
+        paramsSerializer: function (params) {
+          return Qs.stringify(params, { arrayFormat: 'brackets' });
+        },
         params: {
-          apiKey: '6b5dae4615c944b1aabc8497566543fa',
-          sources:
-            '"financial-post,cnbc,the-wall-street-journal,fortune,business-insider"',
-          language: 'en',
-          pageSize: 12,
-          sortBy: 'publishedAt',
-          q: name,
+          reqUrl: 'https://newsapi.org/v2/everything',
+          params: {
+            apiKey: '6b5dae4615c944b1aabc8497566543fa',
+            sources:
+              '"financial-post,cnbc,the-wall-street-journal,fortune,business-insider"',
+            language: 'en',
+            pageSize: 12,
+            sortBy: 'publishedAt',
+            q: name,
+          },
+          xmlToJSON: false,
         },
       })
       .then((response) => {
+        console.log(response);
         response = response.data.articles;
         // save the news articles in an array to state
         this.setState({
