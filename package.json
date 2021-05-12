@@ -8,7 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "autosuggest-highlight": "^3.1.1",
     "axios": "^0.18.0",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "gh-pages": "^2.0.1",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
